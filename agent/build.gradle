@@ -1,0 +1,25 @@
+archivesBaseName = "agent"
+
+dependencies {
+    api("org.ow2.asm:asm-tree:${asmVersion}")
+    api("org.slf4j:slf4j-api:${slf4jVersion}")
+    testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
+}
+
+processResources {
+    exclude("agent.properties")
+
+    from("../LICENSE")
+    rename("LICENSE", "LICENSE-Agent")
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            pom {
+                description = "Java Agent Framework"
+            }
+        }
+    }
+}
