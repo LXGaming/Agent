@@ -7,8 +7,6 @@ dependencies {
 }
 
 processResources {
-    exclude("agent.properties")
-
     from("../LICENSE")
     rename("LICENSE", "LICENSE-Agent")
 }
