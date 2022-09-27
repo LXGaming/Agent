@@ -27,13 +27,13 @@ import org.objectweb.asm.tree.MethodNode;
 public class ASMUtils {
     
     public static void clear(@NotNull MethodNode methodNode) {
-        methodNode.instructions.clear();
-        methodNode.tryCatchBlocks.clear();
+        if (methodNode.instructions != null) methodNode.instructions.clear();
+        if (methodNode.tryCatchBlocks != null) methodNode.tryCatchBlocks.clear();
         methodNode.maxStack = -1;
         methodNode.maxLocals = -1;
-        methodNode.localVariables.clear();
-        methodNode.visibleLocalVariableAnnotations.clear();
-        methodNode.invisibleLocalVariableAnnotations.clear();
+        if (methodNode.localVariables != null) methodNode.localVariables.clear();
+        if (methodNode.visibleLocalVariableAnnotations != null) methodNode.visibleLocalVariableAnnotations.clear();
+        if (methodNode.invisibleLocalVariableAnnotations != null) methodNode.invisibleLocalVariableAnnotations.clear();
     }
     
     public static @NotNull LabelNode getLabelNode(@NotNull Label label) {
