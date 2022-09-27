@@ -36,7 +36,7 @@ public class Configuration {
     protected Properties config;
     
     public Configuration(Path path) {
-        this.configPath = path.resolve("config.properties");
+        this.configPath = path.resolve("agent.properties");
     }
     
     public void loadConfiguration() throws IOException {
