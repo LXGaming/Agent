@@ -47,7 +47,7 @@ public class MixinUtils {
     public static boolean canVisit(@NotNull MethodNode methodNode, @NotNull VisitMethod visitMethod) {
         return (visitMethod.access() == -1 || (methodNode.access & visitMethod.access()) == visitMethod.access())
                 && (visitMethod.name().equals("") || visitMethod.name().equals(methodNode.name))
-                && (visitMethod.descriptor().equals("") || visitMethod.descriptor().equals(methodNode.desc))
+                && canVisitMethodDescriptor(methodNode.desc, visitMethod.descriptor())
                 && (visitMethod.signature().equals("") || visitMethod.signature().equals(methodNode.signature))
                 && (visitMethod.exceptions().length == 0 || StringUtils.containsAll(methodNode.exceptions, visitMethod.exceptions()));
     }
@@ -69,7 +69,7 @@ public class MixinUtils {
             return (visitInsn.opcode() == -1 || visitInsn.opcode() == insnNode.getOpcode())
                     && canVisitClass(insnNode.owner, visitInsn.owner())
                     && (visitInsn.name().equals("") || visitInsn.name().equals(insnNode.name))
-                    && (visitInsn.descriptor().equals("") || visitInsn.descriptor().equals(insnNode.desc));
+                    && canVisitMethodDescriptor(insnNode.desc, visitInsn.descriptor());
         }
         
         return false;
@@ -83,5 +83,23 @@ public class MixinUtils {
         return visitName.charAt(visitName.length() - 1) == '/'
                 ? className.startsWith(visitName) // Package
                 : className.equals(visitName); // Class
+    }
+    
+    public static boolean canVisitMethodDescriptor(@NotNull String methodDescriptor, @NotNull String visitDescriptor) {
+        if (StringUtils.isBlank(visitDescriptor)) {
+            return true;
+        }
+        
+        int startIndex = visitDescriptor.indexOf('(');
+        int endIndex = visitDescriptor.indexOf(')');
+        if (startIndex == -1 && endIndex == -1) {
+            return methodDescriptor.endsWith(visitDescriptor); // Return Type
+        }
+        
+        if (startIndex == 0 && endIndex == visitDescriptor.length() - 1) {
+            return methodDescriptor.startsWith(visitDescriptor); // Parameters
+        }
+        
+        return methodDescriptor.equals(visitDescriptor);
     }
 }
