@@ -16,6 +16,7 @@
 
 package io.github.lxgaming.agent.asm;
 
+import com.typesafe.config.Config;
 import io.github.lxgaming.agent.asm.annotation.Setting;
 import io.github.lxgaming.agent.asm.annotation.Visit;
 import io.github.lxgaming.agent.asm.annotation.VisitFieldInsn;
@@ -23,7 +24,7 @@ import io.github.lxgaming.agent.asm.annotation.VisitMethod;
 import io.github.lxgaming.agent.asm.annotation.VisitMethodInsn;
 import io.github.lxgaming.agent.asm.exception.MixinException;
 import io.github.lxgaming.agent.util.ASMUtils;
-import io.github.lxgaming.agent.util.PropertiesUtils;
+import io.github.lxgaming.agent.util.ConfigUtils;
 import io.github.lxgaming.agent.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Properties;
 
 public class MixinCollection {
     
@@ -71,11 +71,11 @@ public class MixinCollection {
     protected final Collection<Class<?>> classes;
     protected final Collection<MixinDescriptor> descriptors;
     protected final Logger logger;
-    protected Properties properties;
+    protected Config config;
     
-    public MixinCollection(@Nullable Properties properties) {
+    public MixinCollection(@Nullable Config config) {
         this(new HashSet<>(), new LinkedHashSet<>());
-        this.properties = properties;
+        this.config = config;
     }
     
     protected MixinCollection(@NotNull Collection<Class<?>> classes, @NotNull Collection<MixinDescriptor> descriptors) {
@@ -97,7 +97,7 @@ public class MixinCollection {
      * @return the default {@link MixinTransformer} implementation
      */
     public @NotNull MixinTransformer buildMixinTransformer() {
-        return new MixinTransformer(new LinkedHashSet<>(descriptors), properties);
+        return new MixinTransformer(new LinkedHashSet<>(descriptors), config);
     }
     
     /**
@@ -204,7 +204,7 @@ public class MixinCollection {
                 modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
             }
             
-            String setting = PropertiesUtils.getString(properties, classSetting, fieldSetting);
+            String setting = ConfigUtils.getString(config, classSetting, fieldSetting);
             if (StringUtils.isBlank(setting)) {
                 continue;
             }
@@ -227,7 +227,7 @@ public class MixinCollection {
         
         Collection<MixinDescriptor> descriptors = new ArrayList<>();
         for (Method method : clazz.getDeclaredMethods()) {
-            Boolean setting = PropertiesUtils.getBoolean(properties, classSetting, method.getDeclaredAnnotation(Setting.class));
+            Boolean setting = ConfigUtils.getBoolean(config, classSetting, method.getDeclaredAnnotation(Setting.class));
             
             for (VisitMethod visitMethod : method.getDeclaredAnnotationsByType(VisitMethod.class)) {
                 boolean hasVisitor = false;

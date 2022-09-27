@@ -16,6 +16,10 @@
 
 package io.github.lxgaming.agent.configuration;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigParseOptions;
+import com.typesafe.config.ConfigRenderOptions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,15 +32,19 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Properties;
 
 public class Configuration {
     
+    private static final ConfigParseOptions DEFAULT_PARSE_OPTIONS = ConfigParseOptions.defaults();
+    private static final ConfigRenderOptions DEFAULT_RENDER_OPTIONS = ConfigRenderOptions.defaults()
+            .setOriginComments(false)
+            .setJson(false);
+    
     protected final Path configPath;
-    protected Properties config;
+    protected Config config;
     
     public Configuration(Path path) {
-        this.configPath = path.resolve("agent.properties");
+        this.configPath = path.resolve("agent.conf");
     }
     
     public void loadConfiguration() throws IOException {
@@ -47,37 +55,37 @@ public class Configuration {
         serializeFileAsync(configPath, config);
     }
     
-    public @Nullable Properties getConfig() {
+    public @Nullable Config getConfig() {
         return config;
     }
     
-    protected @NotNull Properties deserializeFile(@NotNull Path path) throws IOException {
-        Properties properties = new Properties();
+    protected @NotNull Config deserializeFile(@NotNull Path path) throws IOException {
+        Config config = ConfigFactory.empty();
+        
+        if (Files.exists(path)) {
+            try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+                config = config.withFallback(ConfigFactory.parseReader(reader, DEFAULT_PARSE_OPTIONS));
+            }
+        }
         
         InputStream inputStream = ClassLoader.getSystemResourceAsStream(path.getFileName().toString());
         if (inputStream != null) {
             try (Reader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-                properties.load(reader);
+                config = config.withFallback(ConfigFactory.parseReader(reader, DEFAULT_PARSE_OPTIONS));
             }
         }
         
-        if (Files.exists(path)) {
-            try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-                properties.load(reader);
-            }
-        }
-        
-        return properties;
+        return config;
     }
     
-    protected void serializeFileAsync(@NotNull Path path, @NotNull Properties properties) throws IOException {
+    protected void serializeFileAsync(@NotNull Path path, @NotNull Config config) throws IOException {
         Path parent = path.getParent();
         if (parent != null && !Files.exists(parent)) {
             Files.createDirectories(parent);
         }
         
         try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-            properties.store(writer, null);
+            writer.write(config.root().render(DEFAULT_RENDER_OPTIONS));
         }
     }
 }

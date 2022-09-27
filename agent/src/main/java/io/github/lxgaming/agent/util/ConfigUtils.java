@@ -16,34 +16,37 @@
 
 package io.github.lxgaming.agent.util;
 
+import com.typesafe.config.Config;
 import io.github.lxgaming.agent.asm.annotation.Setting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Properties;
 import java.util.StringJoiner;
 
-public class PropertiesUtils {
+public class ConfigUtils {
     
-    public static @NotNull Boolean getBoolean(@Nullable Properties properties, @Nullable Setting... settings) {
-        return getBoolean(properties, getSetting(settings));
+    public static @NotNull Boolean getBoolean(@Nullable Config config, @Nullable Setting... settings) {
+        return getBoolean(config, getSetting(settings));
     }
     
-    public static boolean getBoolean(@Nullable Properties properties, @NotNull String key) {
-        String value = getString(properties, key);
-        return Boolean.parseBoolean(value);
+    public static boolean getBoolean(@Nullable Config config, @NotNull String path) {
+        if (config == null) {
+            return false;
+        }
+        
+        return config.getBoolean(path);
     }
     
-    public static @Nullable String getString(@Nullable Properties properties, @Nullable Setting... settings) {
-        return getString(properties, getSetting(settings));
+    public static @Nullable String getString(@Nullable Config config, @Nullable Setting... settings) {
+        return getString(config, getSetting(settings));
     }
     
-    public static @Nullable String getString(@Nullable Properties properties, @NotNull String key) {
-        if (properties == null) {
+    public static @Nullable String getString(@Nullable Config config, @NotNull String path) {
+        if (config == null) {
             return null;
         }
         
-        return properties.getProperty(key);
+        return config.getString(path);
     }
     
     public static @NotNull String getSetting(@Nullable Setting... settings) {

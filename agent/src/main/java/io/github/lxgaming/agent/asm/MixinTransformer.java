@@ -16,9 +16,10 @@
 
 package io.github.lxgaming.agent.asm;
 
+import com.typesafe.config.Config;
+import io.github.lxgaming.agent.util.ConfigUtils;
 import io.github.lxgaming.agent.util.MixinUtils;
 import io.github.lxgaming.agent.util.PathUtils;
-import io.github.lxgaming.agent.util.PropertiesUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
@@ -35,17 +36,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.ProtectionDomain;
 import java.util.Collection;
-import java.util.Properties;
 
 public class MixinTransformer implements ClassFileTransformer {
     
     protected final Collection<MixinDescriptor> descriptors;
     protected final Logger logger;
-    protected Properties properties;
+    protected Config config;
     
-    public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors, @Nullable Properties properties) {
+    public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors, @Nullable Config config) {
         this(descriptors);
-        this.properties = properties;
+        this.config = config;
     }
     
     public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors) {
@@ -125,7 +125,7 @@ public class MixinTransformer implements ClassFileTransformer {
     
     protected void export(@NotNull String name, byte[] bytes) {
         try {
-            if (!PropertiesUtils.getBoolean(properties, "debug.export")) {
+            if (!ConfigUtils.getBoolean(config, "debug.export")) {
                 return;
             }
             
