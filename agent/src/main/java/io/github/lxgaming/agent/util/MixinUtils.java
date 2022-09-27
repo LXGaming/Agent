@@ -37,7 +37,7 @@ public class MixinUtils {
     
     public static boolean canVisit(@NotNull ClassNode classNode, @NotNull Visit visit) {
         return (visit.version() == -1 || visit.version() == classNode.version)
-                && (visit.access() == -1 || visit.access() == classNode.access)
+                && (visit.access() == -1 || (classNode.access & visit.access()) == visit.access())
                 && canVisitClass(classNode.name, visit.name())
                 && (visit.signature().equals("") || visit.signature().equals(classNode.signature))
                 && (visit.superName().equals("") || visit.superName().equals(classNode.superName))
@@ -45,7 +45,7 @@ public class MixinUtils {
     }
     
     public static boolean canVisit(@NotNull MethodNode methodNode, @NotNull VisitMethod visitMethod) {
-        return (visitMethod.access() == -1 || visitMethod.access() == methodNode.access)
+        return (visitMethod.access() == -1 || (methodNode.access & visitMethod.access()) == visitMethod.access())
                 && (visitMethod.name().equals("") || visitMethod.name().equals(methodNode.name))
                 && (visitMethod.descriptor().equals("") || visitMethod.descriptor().equals(methodNode.desc))
                 && (visitMethod.signature().equals("") || visitMethod.signature().equals(methodNode.signature))
