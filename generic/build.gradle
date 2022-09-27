@@ -1,0 +1,54 @@
+archivesBaseName = "agent-generic"
+
+dependencies {
+    compileJar(project(path: ":agent")) {
+        exclude(module: "annotations")
+    }
+    compileJar("org.slf4j:slf4j-simple:${slf4jVersion}")
+}
+
+compileJava {
+    dependsOn(":agent:build")
+}
+
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    manifest {
+        attributes(
+            "Can-Redefine-Classes": "true",
+            "Can-Retransform-Classes": "true",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "Implementation-Title": "Generic Agent",
+            "Implementation-Vendor": "LX_Gaming",
+            "Implementation-Version": "${project.version}",
+            "Premain-Class": "io.github.lxgaming.agent.Main",
+            "Specification-Title": "Agent",
+            "Specification-Vendor": "LX_Gaming",
+            "Specification-Version": "1"
+        )
+    }
+
+    from {
+        configurations.compileJar.findAll({
+            it.isDirectory() || it.name.endsWith(".jar")
+        }).collect({
+            it.isDirectory() ? it : zipTree(it)
+        })
+    }
+
+    exclude("META-INF/maven/**")
+    exclude("META-INF/versions/**")
+    exclude("module-info.class")
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            pom {
+                description = "Agent targeting Generic products"
+            }
+        }
+    }
+}

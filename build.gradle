@@ -17,7 +17,7 @@ subprojects {
 
     configurations {
         compileJar {
-            implementation.extendsFrom(compileJar)
+            compileOnly.extendsFrom(compileJar)
         }
     }
 
@@ -37,6 +37,13 @@ subprojects {
 
     javadoc {
         failOnError = false
+    }
+
+    processResources {
+        if (project(":agent") != project) {
+            dependsOn("copyResources")
+            finalizedBy("mergeResources")
+        }
     }
 
     publishing {
@@ -110,5 +117,27 @@ subprojects {
         dependsOn("build")
         from jar
         into "${project.rootProject.projectDir}/dist"
+    }
+
+    task copyResources(type: Copy) {
+        from project(":agent").file("src/main/resources/simplelogger.properties")
+        into "$buildDir/resources/main"
+    }
+
+    task mergeResources {
+        doLast {
+            Set<File> files = [
+                project(":agent"),
+                project
+            ].collect { project ->
+                project.file("src/main/resources/agent.conf")
+            }
+
+            def output = new File("$buildDir/resources/main/agent.conf")
+            output.getParentFile().mkdirs()
+            output.newWriter().withWriter { writer ->
+                writer << files.collect { file -> file.text.normalize() }.join('\n')
+            }
+        }
     }
 }

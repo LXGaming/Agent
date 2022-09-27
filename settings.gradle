@@ -1,6 +1,7 @@
 include "agent"
 
 [
+    "generic"
 ].each {
     include(it)
     findProject(":$it")?.name = "agent-$it"
