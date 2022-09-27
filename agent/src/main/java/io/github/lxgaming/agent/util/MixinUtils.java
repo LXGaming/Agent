@@ -40,7 +40,7 @@ public class MixinUtils {
                 && (visit.access() == -1 || (classNode.access & visit.access()) == visit.access())
                 && canVisitClass(classNode.name, visit.name())
                 && (visit.signature().equals("") || visit.signature().equals(classNode.signature))
-                && (visit.superName().equals("") || visit.superName().equals(classNode.superName))
+                && canVisitClass(classNode.superName, visit.superName())
                 && (visit.interfaces().length == 0 || StringUtils.containsAll(classNode.interfaces, visit.interfaces()));
     }
     
