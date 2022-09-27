@@ -22,7 +22,7 @@ import io.github.lxgaming.agent.asm.annotation.VisitFieldInsn;
 import io.github.lxgaming.agent.asm.annotation.VisitMethod;
 import io.github.lxgaming.agent.asm.annotation.VisitMethodInsn;
 import io.github.lxgaming.agent.asm.exception.MixinException;
-import io.github.lxgaming.agent.util.MixinUtils;
+import io.github.lxgaming.agent.util.ASMUtils;
 import io.github.lxgaming.agent.util.PropertiesUtils;
 import io.github.lxgaming.agent.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -293,7 +293,7 @@ public class MixinCollection {
                     "Invalid descriptor on %s.%s! Expected %s but found %s",
                     clazz.getName(),
                     method.getName(),
-                    Type.getMethodDescriptor(Type.VOID_TYPE, MixinUtils.getTypes(parameterTypes)),
+                    Type.getMethodDescriptor(Type.VOID_TYPE, ASMUtils.getTypes(parameterTypes)),
                     Type.getMethodDescriptor(method)
             ));
         }
