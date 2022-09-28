@@ -223,12 +223,8 @@ public class MixinCollection {
             ));
         }
         
-        Setting classSetting = clazz.getDeclaredAnnotation(Setting.class);
-        
         Collection<MixinDescriptor> descriptors = new ArrayList<>();
         for (Method method : clazz.getDeclaredMethods()) {
-            Boolean setting = ConfigUtils.getBoolean(config, classSetting, method.getDeclaredAnnotation(Setting.class));
-            
             for (VisitMethod visitMethod : method.getDeclaredAnnotationsByType(VisitMethod.class)) {
                 boolean hasVisitor = false;
                 for (Map.Entry<Class<? extends Annotation>, Class<?>[]> entry : INSN_MAPPINGS.entrySet()) {
@@ -245,12 +241,12 @@ public class MixinCollection {
                         ));
                     }
                     
-                    descriptors.add(createMixinDescriptor(clazz, method, setting, visit, visitMethod, visitInsnAnnotation, instance));
+                    descriptors.add(createMixinDescriptor(clazz, method, visit, visitMethod, visitInsnAnnotation, instance));
                     hasVisitor = true;
                 }
                 
                 if (!hasVisitor) {
-                    descriptors.add(createMixinDescriptor(clazz, method, setting, visit, visitMethod, null, instance));
+                    descriptors.add(createMixinDescriptor(clazz, method, visit, visitMethod, null, instance));
                 }
             }
         }
@@ -260,7 +256,6 @@ public class MixinCollection {
     
     protected @NotNull MixinDescriptor createMixinDescriptor(@NotNull Class<?> clazz,
                                                              @NotNull Method method,
-                                                             @NotNull Boolean setting,
                                                              @NotNull Visit visit,
                                                              @NotNull VisitMethod visitMethod,
                                                              @Nullable Annotation visitInsnAnnotation,
@@ -297,6 +292,11 @@ public class MixinCollection {
                     Type.getMethodDescriptor(method)
             ));
         }
+        
+        Boolean setting = ConfigUtils.getBoolean(config,
+                clazz.getDeclaredAnnotation(Setting.class),
+                method.getDeclaredAnnotation(Setting.class)
+        );
         
         method.setAccessible(true);
         MethodHandle methodHandle = LOOKUP.unreflect(method);
