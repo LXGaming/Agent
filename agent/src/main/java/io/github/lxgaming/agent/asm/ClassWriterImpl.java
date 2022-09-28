@@ -74,7 +74,7 @@ public class ClassWriterImpl extends ClassWriter {
     }
     
     @Override
-    public ClassLoader getClassLoader() {
+    protected ClassLoader getClassLoader() {
         return classLoader;
     }
     
