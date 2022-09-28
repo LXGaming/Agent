@@ -1,7 +1,9 @@
 plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2" apply false
 }
 
 subprojects {
+    apply plugin: "com.github.johnrengelman.shadow"
     apply plugin: "java"
     apply plugin: "java-library"
     apply plugin: "maven-publish"
@@ -93,6 +95,20 @@ subprojects {
         }
     }
 
+    shadowJar {
+        doFirst {
+            configurations = [project.configurations.compileJar]
+        }
+
+        exclude("META-INF/maven/**")
+        exclude("META-INF/versions/**")
+        exclude("module-info.class")
+        mergeServiceFiles()
+        relocate("com.typesafe.config", "io.github.lxgaming.agent.lib.config")
+        relocate("org.objectweb.asm", "io.github.lxgaming.agent.lib.asm")
+        relocate("org.slf4j", "io.github.lxgaming.agent.lib.slf4j")
+    }
+
     signing {
         if (project.hasProperty("signingKey") && project.hasProperty("signingPassword")) {
             useInMemoryPgpKeys(project.property("signingKey"), project.property("signingPassword"))
@@ -109,18 +125,9 @@ subprojects {
         useJUnitPlatform()
     }
 
-    task dist(type: Copy) {
-        onlyIf {
-            project(":agent") != project
-        }
-
-        dependsOn("build")
-        from jar
-        into "${project.rootProject.projectDir}/dist"
-    }
-
     task copyResources(type: Copy) {
         from project(":agent").file("src/main/resources/simplelogger.properties")
+        filter { String line -> line.replace("org.slf4j", "io.github.lxgaming.agent.lib.slf4j") }
         into "$buildDir/resources/main"
     }
 

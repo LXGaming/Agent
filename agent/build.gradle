@@ -7,13 +7,10 @@ dependencies {
     testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
 }
 
-jar {
-    exclude("simplelogger.properties")
-}
-
 processResources {
     from("../LICENSE")
     rename("LICENSE", "LICENSE-Agent")
+    exclude("simplelogger.properties")
 }
 
 publishing {
@@ -25,4 +22,8 @@ publishing {
             }
         }
     }
+}
+
+shadowJar {
+    enabled = false
 }

@@ -1,6 +1,7 @@
 archivesBaseName = "agent-generic"
 
 dependencies {
+    api(project(path: ":agent"))
     compileJar(project(path: ":agent")) {
         exclude(module: "annotations")
     }
@@ -12,7 +13,7 @@ compileJava {
 }
 
 jar {
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    dependsOn("shadowJar")
 
     manifest {
         attributes(
@@ -29,17 +30,7 @@ jar {
         )
     }
 
-    from {
-        configurations.compileJar.findAll({
-            it.isDirectory() || it.name.endsWith(".jar")
-        }).collect({
-            it.isDirectory() ? it : zipTree(it)
-        })
-    }
-
-    exclude("META-INF/maven/**")
-    exclude("META-INF/versions/**")
-    exclude("module-info.class")
+    exclude("simplelogger.properties")
 }
 
 publishing {
