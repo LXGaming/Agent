@@ -3,9 +3,9 @@
 [![License](https://img.shields.io/github/license/LXGaming/Agent?label=License&cacheSeconds=86400)](https://github.com/LXGaming/Agent/blob/main/LICENSE)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.lxgaming/agent?label=Maven%20Central)
 
-## Patches
+## 🧩 Patches
 
-### Generic
+### 📦 Generic ([wiki](https://github.com/LXGaming/Agent/wiki/Generic))
 |    Patch     |      Description       |
 |:------------:|:----------------------:|
 |  `h2.jndi`   | patches CVE-2021-42392 |
