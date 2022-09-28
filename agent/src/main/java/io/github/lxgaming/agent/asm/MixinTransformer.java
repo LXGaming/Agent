@@ -115,7 +115,7 @@ public class MixinTransformer implements ClassFileTransformer {
             return null;
         }
         
-        ClassWriter classWriter = new ClassWriterImpl(ClassWriter.COMPUTE_FRAMES, classLoader);
+        ClassWriter classWriter = new ClassWriterImpl(ClassWriter.COMPUTE_FRAMES, classLoader, classNode);
         classNode.accept(classWriter);
         
         byte[] modifiedBytes = classWriter.toByteArray();
