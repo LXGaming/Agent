@@ -58,7 +58,7 @@ public class JdbcUtilsMixin {
         methodNode.visitInsn(Opcodes.DUP);
         methodNode.visitLdcInsn("Only java scheme is supported for JNDI lookups");
         methodNode.visitLdcInsn("08001");
-        methodNode.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/SQLException", "<init>", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+        methodNode.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/sql/SQLException", "<init>", "(Ljava/lang/String;Ljava/lang/String;)V", false);
         methodNode.visitInsn(Opcodes.ATHROW);
         methodNode.visitMaxs(-1, -1);
     }
