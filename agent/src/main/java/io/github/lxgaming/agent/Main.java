@@ -19,7 +19,6 @@ package io.github.lxgaming.agent;
 import io.github.lxgaming.agent.api.AgentService;
 import io.github.lxgaming.agent.asm.MixinCollection;
 import io.github.lxgaming.agent.configuration.Configuration;
-import io.github.lxgaming.agent.util.PathUtils;
 
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
@@ -30,7 +29,7 @@ public class Main {
     private static final ServiceLoader<AgentService> AGENT_SERVICES = ServiceLoader.load(AgentService.class);
     
     public static void premain(String agentArgs, Instrumentation inst) throws IOException {
-        Configuration configuration = new Configuration(PathUtils.getWorkingDirectory());
+        Configuration configuration = new Configuration();
         configuration.loadConfiguration();
         configuration.saveConfiguration();
         

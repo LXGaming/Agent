@@ -20,6 +20,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.ConfigRenderOptions;
+import io.github.lxgaming.agent.util.PathUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,8 +44,12 @@ public class Configuration {
     protected final Path configPath;
     protected Config config;
     
-    public Configuration(Path path) {
-        this.configPath = path.resolve("agent.conf");
+    public Configuration() {
+        this(PathUtils.getWorkingDirectory().resolve("agent.conf"));
+    }
+    
+    protected Configuration(Path configPath) {
+        this.configPath = configPath;
     }
     
     public void loadConfiguration() throws IOException {
