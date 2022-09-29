@@ -147,7 +147,11 @@ public class MixinCollection {
         
         Collection<MixinDescriptor> descriptors = getDescriptors(mixinClass, instance);
         
-        setFields(mixinClass, instance);
+        Class<?> clazz = mixinClass;
+        while (clazz != null && clazz != Object.class) {
+            setFields(clazz, instance);
+            clazz = clazz.getSuperclass();
+        }
         
         this.descriptors.addAll(descriptors);
         return this;
