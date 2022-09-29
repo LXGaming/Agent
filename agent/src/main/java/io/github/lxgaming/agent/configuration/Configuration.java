@@ -65,7 +65,7 @@ public class Configuration {
     }
     
     protected @NotNull Config deserializeFile(@NotNull Path path) throws IOException {
-        Config config = ConfigFactory.empty();
+        Config config = ConfigFactory.defaultOverrides();
         
         if (Files.exists(path)) {
             try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
