@@ -19,7 +19,6 @@ package io.github.lxgaming.agent.asm;
 import com.typesafe.config.Config;
 import io.github.lxgaming.agent.util.ConfigUtils;
 import io.github.lxgaming.agent.util.MixinUtils;
-import io.github.lxgaming.agent.util.PathUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
@@ -125,11 +124,12 @@ public class MixinTransformer implements ClassFileTransformer {
     
     protected void export(@NotNull String name, byte[] bytes) {
         try {
-            if (!ConfigUtils.getBoolean(config, "debug.export")) {
+            Path exportPath = ConfigUtils.getPath(config, "debug.export-dir");
+            if (exportPath == null || !ConfigUtils.getBoolean(config, "debug.export")) {
                 return;
             }
             
-            Path path = PathUtils.getWorkingDirectory().resolve(".agent.out").resolve(name + ".class");
+            Path path = exportPath.resolve(name + ".class");
             Path parent = path.getParent();
             if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);

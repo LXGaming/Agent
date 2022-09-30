@@ -21,6 +21,7 @@ import io.github.lxgaming.agent.asm.annotation.Setting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.StringJoiner;
 
 public class ConfigUtils {
@@ -31,6 +32,11 @@ public class ConfigUtils {
     
     public static boolean getBoolean(@Nullable Config config, @NotNull String path) {
         return config != null && config.getBoolean(path);
+    }
+    
+    public static @Nullable Path getPath(@Nullable Config config, @NotNull String path) {
+        String value = getString(config, path);
+        return StringUtils.isNotBlank(value) ? PathUtils.getWorkingDirectory().resolve(value) : null;
     }
     
     public static @Nullable String getString(@Nullable Config config, @Nullable Setting... settings) {
