@@ -20,6 +20,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.ConfigRenderOptions;
+import com.typesafe.config.ConfigResolveOptions;
 import io.github.lxgaming.agent.util.PathUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +41,7 @@ public class Configuration {
     private static final ConfigRenderOptions DEFAULT_RENDER_OPTIONS = ConfigRenderOptions.defaults()
             .setOriginComments(false)
             .setJson(false);
+    private static final ConfigResolveOptions DEFAULT_RESOLVE_OPTIONS = ConfigResolveOptions.defaults();
     
     protected final Path configPath;
     protected Config config;
@@ -54,8 +56,9 @@ public class Configuration {
     }
     
     public void loadConfiguration() throws IOException {
-        this.config = deserializeFile(configPath);
-        this.overrideConfig = ConfigFactory.defaultOverrides().withFallback(config).resolve();
+        Config config = deserializeFile(configPath);
+        this.overrideConfig = ConfigFactory.defaultOverrides().withFallback(config).resolve(DEFAULT_RESOLVE_OPTIONS);
+        this.config = config.resolveWith(overrideConfig, DEFAULT_RESOLVE_OPTIONS);
     }
     
     public void saveConfiguration() throws IOException {
