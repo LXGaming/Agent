@@ -37,11 +37,11 @@ import java.nio.file.Path;
 
 public class Configuration {
     
-    private static final ConfigParseOptions DEFAULT_PARSE_OPTIONS = ConfigParseOptions.defaults();
-    private static final ConfigRenderOptions DEFAULT_RENDER_OPTIONS = ConfigRenderOptions.defaults()
+    protected static final ConfigParseOptions DEFAULT_PARSE_OPTIONS = ConfigParseOptions.defaults();
+    protected static final ConfigRenderOptions DEFAULT_RENDER_OPTIONS = ConfigRenderOptions.defaults()
             .setOriginComments(false)
             .setJson(false);
-    private static final ConfigResolveOptions DEFAULT_RESOLVE_OPTIONS = ConfigResolveOptions.defaults();
+    protected static final ConfigResolveOptions DEFAULT_RESOLVE_OPTIONS = ConfigResolveOptions.defaults();
     
     protected final Path configPath;
     protected Config config;
