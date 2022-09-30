@@ -30,11 +30,7 @@ public class ConfigUtils {
     }
     
     public static boolean getBoolean(@Nullable Config config, @NotNull String path) {
-        if (config == null) {
-            return false;
-        }
-        
-        return config.getBoolean(path);
+        return config != null && config.getBoolean(path);
     }
     
     public static @Nullable String getString(@Nullable Config config, @Nullable Setting... settings) {
@@ -42,11 +38,7 @@ public class ConfigUtils {
     }
     
     public static @Nullable String getString(@Nullable Config config, @NotNull String path) {
-        if (config == null) {
-            return null;
-        }
-        
-        return config.getString(path);
+        return config != null ? config.getString(path) : null;
     }
     
     public static @NotNull String getSetting(@Nullable Setting... settings) {
