@@ -33,7 +33,7 @@ public class Main {
         configuration.loadConfiguration();
         configuration.saveConfiguration();
         
-        MixinCollection mixins = new MixinCollection(configuration.getConfig());
+        MixinCollection mixins = new MixinCollection(configuration.getOverrideConfig());
         for (AgentService service : AGENT_SERVICES) {
             service.initialize(mixins);
         }

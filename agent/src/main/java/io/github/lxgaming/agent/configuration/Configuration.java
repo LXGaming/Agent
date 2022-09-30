@@ -43,6 +43,7 @@ public class Configuration {
     
     protected final Path configPath;
     protected Config config;
+    protected Config overrideConfig;
     
     public Configuration() {
         this(PathUtils.getWorkingDirectory().resolve("agent.conf"));
@@ -54,6 +55,7 @@ public class Configuration {
     
     public void loadConfiguration() throws IOException {
         this.config = deserializeFile(configPath);
+        this.overrideConfig = ConfigFactory.defaultOverrides().withFallback(config).resolve();
     }
     
     public void saveConfiguration() throws IOException {
@@ -64,8 +66,12 @@ public class Configuration {
         return config;
     }
     
+    public @Nullable Config getOverrideConfig() {
+        return overrideConfig;
+    }
+    
     protected @NotNull Config deserializeFile(@NotNull Path path) throws IOException {
-        Config config = ConfigFactory.defaultOverrides();
+        Config config = ConfigFactory.empty();
         
         if (Files.exists(path)) {
             try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
