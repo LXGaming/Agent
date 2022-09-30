@@ -48,7 +48,7 @@ public class Configuration {
         this(PathUtils.getWorkingDirectory().resolve("agent.conf"));
     }
     
-    protected Configuration(Path configPath) {
+    public Configuration(Path configPath) {
         this.configPath = configPath;
     }
     
