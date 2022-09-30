@@ -40,22 +40,16 @@ import java.util.Collection;
 public class MixinTransformer implements ClassFileTransformer {
     
     protected final Collection<MixinDescriptor> descriptors;
-    protected final Path exportPath;
     protected final Logger logger;
     protected Config config;
     
     public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors, @Nullable Config config) {
-        this(descriptors, PathUtils.getWorkingDirectory().resolve(".agent.out"), config);
-    }
-    
-    public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors, @NotNull Path exportPath, @Nullable Config config) {
-        this(descriptors, exportPath);
+        this(descriptors);
         this.config = config;
     }
     
-    public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors, @NotNull Path exportPath) {
+    public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors) {
         this.descriptors = descriptors;
-        this.exportPath = exportPath;
         this.logger = LoggerFactory.getLogger(getClass());
     }
     
@@ -135,7 +129,7 @@ public class MixinTransformer implements ClassFileTransformer {
                 return;
             }
             
-            Path path = exportPath.resolve(name + ".class");
+            Path path = PathUtils.getWorkingDirectory().resolve(".agent.out").resolve(name + ".class");
             Path parent = path.getParent();
             if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
