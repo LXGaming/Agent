@@ -26,8 +26,13 @@ import java.util.StringJoiner;
 
 public class ConfigUtils {
     
-    public static @NotNull Boolean getBoolean(@Nullable Config config, @Nullable Setting... settings) {
-        return getBoolean(config, getSetting(settings));
+    public static boolean getBoolean(@Nullable Config config, @Nullable Setting... settings) {
+        if (config == null) {
+            return false;
+        }
+        
+        String path = getSetting(settings);
+        return StringUtils.isNotBlank(path) && getBoolean(config, path);
     }
     
     public static boolean getBoolean(@Nullable Config config, @NotNull String path) {
@@ -40,22 +45,31 @@ public class ConfigUtils {
     }
     
     public static @Nullable String getString(@Nullable Config config, @Nullable Setting... settings) {
-        return getString(config, getSetting(settings));
+        if (config == null) {
+            return null;
+        }
+        
+        String path = getSetting(settings);
+        return StringUtils.isNotBlank(path) ? getString(config, path) : null;
     }
     
     public static @Nullable String getString(@Nullable Config config, @NotNull String path) {
         return config != null ? config.getString(path) : null;
     }
     
-    public static @NotNull String getSetting(@Nullable Setting... settings) {
+    public static @Nullable String getSetting(@Nullable Setting... settings) {
+        if (settings == null || settings.length == 0) {
+            return null;
+        }
+        
         StringJoiner stringJoiner = new StringJoiner(".");
-        stringJoiner.add("mixin");
         for (Setting setting : settings) {
             if (setting != null && StringUtils.isNotBlank(setting.value())) {
                 stringJoiner.add(setting.value());
             }
         }
         
-        return stringJoiner.toString();
+        String value = stringJoiner.toString();
+        return StringUtils.isNotBlank(value) ? "mixin." + value : null;
     }
 }
