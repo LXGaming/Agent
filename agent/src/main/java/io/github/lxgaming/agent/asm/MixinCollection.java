@@ -301,6 +301,13 @@ public class MixinCollection {
                 clazz.getDeclaredAnnotation(Setting.class),
                 method.getDeclaredAnnotation(Setting.class)
         );
+        if (setting == null) {
+            throw new MixinException(String.format(
+                    "Missing setting on %s.%s!",
+                    clazz.getName(),
+                    method.getName()
+            ));
+        }
         
         method.setAccessible(true);
         MethodHandle methodHandle = LOOKUP.unreflect(method);

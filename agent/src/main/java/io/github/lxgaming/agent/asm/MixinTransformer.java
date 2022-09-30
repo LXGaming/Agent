@@ -125,7 +125,7 @@ public class MixinTransformer implements ClassFileTransformer {
     protected void export(@NotNull String name, byte[] bytes) {
         try {
             Path exportPath = ConfigUtils.getPath(config, "debug.export-dir");
-            if (exportPath == null || !ConfigUtils.getBoolean(config, "debug.export")) {
+            if (exportPath == null || ConfigUtils.getBoolean(config, "debug.export") != Boolean.TRUE) {
                 return;
             }
             

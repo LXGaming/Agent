@@ -26,17 +26,17 @@ import java.util.StringJoiner;
 
 public class ConfigUtils {
     
-    public static boolean getBoolean(@Nullable Config config, @Nullable Setting... settings) {
+    public static @Nullable Boolean getBoolean(@Nullable Config config, @Nullable Setting... settings) {
         if (config == null) {
-            return false;
+            return null;
         }
         
         String path = getSetting(settings);
-        return StringUtils.isNotBlank(path) && getBoolean(config, path);
+        return StringUtils.isNotBlank(path) ? getBoolean(config, path) : null;
     }
     
-    public static boolean getBoolean(@Nullable Config config, @NotNull String path) {
-        return config != null && config.getBoolean(path);
+    public static @Nullable Boolean getBoolean(@Nullable Config config, @NotNull String path) {
+        return config != null ? config.getBoolean(path) : null;
     }
     
     public static @Nullable Path getPath(@Nullable Config config, @NotNull String path) {
