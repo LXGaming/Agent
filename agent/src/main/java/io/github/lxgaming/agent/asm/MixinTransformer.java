@@ -73,6 +73,7 @@ public class MixinTransformer implements ClassFileTransformer {
     
     protected byte[] transform(@NotNull ClassLoader classLoader, @NotNull String name, byte[] bytes) throws Throwable {
         ClassNode classNode = null;
+        boolean modified = false;
         for (MixinDescriptor descriptor : descriptors) {
             if (descriptor.getSetting() != Boolean.TRUE) {
                 continue;
@@ -99,18 +100,20 @@ public class MixinTransformer implements ClassFileTransformer {
                 
                 if (descriptor.getVisitInsnAnnotation() == null) {
                     descriptor.visit(classNode, methodNode);
+                    modified = true;
                     continue;
                 }
                 
                 for (AbstractInsnNode insnNode : methodNode.instructions) {
                     if (MixinUtils.canVisit(insnNode, descriptor.getVisitInsnAnnotation())) {
                         descriptor.visit(classNode, methodNode, insnNode);
+                        modified = true;
                     }
                 }
             }
         }
         
-        if (classNode == null) {
+        if (classNode == null || !modified) {
             return null;
         }
         
