@@ -62,14 +62,20 @@ public class ConfigUtils {
             return null;
         }
         
-        StringJoiner stringJoiner = new StringJoiner(".");
+        StringJoiner stringJoiner = null;
         for (Setting setting : settings) {
-            if (setting != null && StringUtils.isNotBlank(setting.value())) {
-                stringJoiner.add(setting.value());
+            if (setting == null || StringUtils.isBlank(setting.value())) {
+                continue;
             }
+            
+            if (stringJoiner == null || !setting.inherit()) {
+                stringJoiner = new StringJoiner(".");
+            }
+            
+            stringJoiner.add(setting.value());
         }
         
-        String value = stringJoiner.toString();
+        String value = stringJoiner != null ? stringJoiner.toString() : null;
         return StringUtils.isNotBlank(value) ? "mixin." + value : null;
     }
 }

@@ -28,4 +28,6 @@ import java.lang.annotation.Target;
 public @interface Setting {
     
     @NotNull String value();
+    
+    boolean inherit() default true;
 }
