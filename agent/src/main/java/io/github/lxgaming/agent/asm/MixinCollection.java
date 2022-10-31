@@ -219,8 +219,8 @@ public class MixinCollection {
     }
     
     protected @NotNull Collection<MixinDescriptor> getDescriptors(@NotNull Class<?> clazz, @Nullable Object instance) throws IllegalAccessException {
-        Visit visit = clazz.getDeclaredAnnotation(Visit.class);
-        if (visit == null) {
+        Visit[] visits = clazz.getDeclaredAnnotationsByType(Visit.class);
+        if (visits.length == 0) {
             throw new MixinException(String.format(
                     "Invalid class %s! Missing visitor annotation",
                     clazz.getName()
@@ -228,29 +228,31 @@ public class MixinCollection {
         }
         
         Collection<MixinDescriptor> descriptors = new ArrayList<>();
-        for (Method method : clazz.getDeclaredMethods()) {
-            for (VisitMethod visitMethod : method.getDeclaredAnnotationsByType(VisitMethod.class)) {
-                boolean hasVisitor = false;
-                for (Map.Entry<Class<? extends Annotation>, Class<?>[]> entry : INSN_MAPPINGS.entrySet()) {
-                    Annotation visitInsnAnnotation = method.getDeclaredAnnotation(entry.getKey());
-                    if (visitInsnAnnotation == null) {
-                        continue;
+        for (Visit visit : visits) {
+            for (Method method : clazz.getDeclaredMethods()) {
+                for (VisitMethod visitMethod : method.getDeclaredAnnotationsByType(VisitMethod.class)) {
+                    boolean hasVisitor = false;
+                    for (Map.Entry<Class<? extends Annotation>, Class<?>[]> entry : INSN_MAPPINGS.entrySet()) {
+                        Annotation visitInsnAnnotation = method.getDeclaredAnnotation(entry.getKey());
+                        if (visitInsnAnnotation == null) {
+                            continue;
+                        }
+                        
+                        if (hasVisitor) {
+                            throw new MixinException(String.format(
+                                    "Invalid annotations on %s.%s! Cannot have multiple instruction visitors",
+                                    clazz.getName(),
+                                    method.getName()
+                            ));
+                        }
+                        
+                        descriptors.add(createMixinDescriptor(clazz, method, visit, visitMethod, visitInsnAnnotation, instance));
+                        hasVisitor = true;
                     }
                     
-                    if (hasVisitor) {
-                        throw new MixinException(String.format(
-                                "Invalid annotations on %s.%s! Cannot have multiple instruction visitors",
-                                clazz.getName(),
-                                method.getName()
-                        ));
+                    if (!hasVisitor) {
+                        descriptors.add(createMixinDescriptor(clazz, method, visit, visitMethod, null, instance));
                     }
-                    
-                    descriptors.add(createMixinDescriptor(clazz, method, visit, visitMethod, visitInsnAnnotation, instance));
-                    hasVisitor = true;
-                }
-                
-                if (!hasVisitor) {
-                    descriptors.add(createMixinDescriptor(clazz, method, visit, visitMethod, null, instance));
                 }
             }
         }
