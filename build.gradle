@@ -19,7 +19,7 @@ subprojects {
 
     configurations {
         compileJar {
-            compileOnly.extendsFrom(compileJar)
+            implementation.extendsFrom(compileJar)
         }
     }
 
