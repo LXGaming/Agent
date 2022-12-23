@@ -36,6 +36,7 @@ subprojects {
 
     javadoc {
         failOnError = false
+        options.addStringOption("Xdoclint:none", "-quiet")
     }
 
     processResources {
