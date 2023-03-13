@@ -92,6 +92,15 @@ public class MixinCollection {
     }
     
     /**
+     * Creates a {@link MixinClassFileTransformer} containing the mixins from this {@link MixinCollection}.
+     *
+     * @return the default {@link MixinClassFileTransformer} implementation
+     */
+    public @NotNull MixinClassFileTransformer buildClassFileTransformer() {
+        return new MixinClassFileTransformer(buildTransformer());
+    }
+    
+    /**
      * Creates a {@link MixinTransformer} containing the mixins from this {@link MixinCollection}.
      *
      * @return the default {@link MixinTransformer} implementation

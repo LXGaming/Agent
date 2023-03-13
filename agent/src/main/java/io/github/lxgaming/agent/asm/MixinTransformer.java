@@ -30,13 +30,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.instrument.ClassFileTransformer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.ProtectionDomain;
 import java.util.Collection;
 
-public class MixinTransformer implements ClassFileTransformer {
+public class MixinTransformer {
     
     protected final Collection<MixinDescriptor> descriptors;
     protected final Logger logger;
@@ -52,26 +50,7 @@ public class MixinTransformer implements ClassFileTransformer {
         this.logger = LoggerFactory.getLogger(getClass());
     }
     
-    @Override
-    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
-        if (loader == null || className == null) {
-            return null;
-        }
-        
-        try {
-            byte[] bytes = transform(loader, className, classfileBuffer);
-            if (bytes != null) {
-                logger.debug("Transformed {}", className);
-            }
-            
-            return bytes;
-        } catch (Throwable t) {
-            logger.error("Encountered an error while transforming {}", className, t);
-            return null;
-        }
-    }
-    
-    protected byte[] transform(@NotNull ClassLoader classLoader, @NotNull String name, byte[] bytes) throws Throwable {
+    public byte[] transform(@NotNull ClassLoader classLoader, @NotNull String name, byte[] bytes) throws Throwable {
         ClassNode classNode = null;
         boolean modified = false;
         for (MixinDescriptor descriptor : descriptors) {

@@ -38,6 +38,6 @@ public class Main {
             service.initialize(mixins);
         }
         
-        inst.addTransformer(mixins.buildTransformer(), inst.isRetransformClassesSupported());
+        inst.addTransformer(mixins.buildClassFileTransformer(), inst.isRetransformClassesSupported());
     }
 }
