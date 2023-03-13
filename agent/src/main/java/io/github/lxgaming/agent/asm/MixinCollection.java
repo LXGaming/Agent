@@ -96,7 +96,7 @@ public class MixinCollection {
      *
      * @return the default {@link MixinTransformer} implementation
      */
-    public @NotNull MixinTransformer buildMixinTransformer() {
+    public @NotNull MixinTransformer buildTransformer() {
         return new MixinTransformer(new LinkedHashSet<>(descriptors), config);
     }
     
@@ -246,12 +246,12 @@ public class MixinCollection {
                             ));
                         }
                         
-                        descriptors.add(createMixinDescriptor(clazz, method, visit, visitMethod, visitInsnAnnotation, instance));
+                        descriptors.add(createDescriptor(clazz, method, visit, visitMethod, visitInsnAnnotation, instance));
                         hasVisitor = true;
                     }
                     
                     if (!hasVisitor) {
-                        descriptors.add(createMixinDescriptor(clazz, method, visit, visitMethod, null, instance));
+                        descriptors.add(createDescriptor(clazz, method, visit, visitMethod, null, instance));
                     }
                 }
             }
@@ -260,12 +260,12 @@ public class MixinCollection {
         return descriptors;
     }
     
-    protected @NotNull MixinDescriptor createMixinDescriptor(@NotNull Class<?> clazz,
-                                                             @NotNull Method method,
-                                                             @NotNull Visit visit,
-                                                             @NotNull VisitMethod visitMethod,
-                                                             @Nullable Annotation visitInsnAnnotation,
-                                                             @Nullable Object instance) throws IllegalAccessException {
+    protected @NotNull MixinDescriptor createDescriptor(@NotNull Class<?> clazz,
+                                                        @NotNull Method method,
+                                                        @NotNull Visit visit,
+                                                        @NotNull VisitMethod visitMethod,
+                                                        @Nullable Annotation visitInsnAnnotation,
+                                                        @Nullable Object instance) throws IllegalAccessException {
         if (Modifier.isAbstract(method.getModifiers())) {
             throw new MixinException(String.format(
                     "Invalid method %s.%s! Cannot be abstract",
