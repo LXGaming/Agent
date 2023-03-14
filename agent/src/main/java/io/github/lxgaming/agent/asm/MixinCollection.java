@@ -101,6 +101,25 @@ public class MixinCollection {
     }
     
     /**
+     * Creates a {@link MixinClassLoader} containing the mixins from this {@link MixinCollection}.
+     *
+     * @return the default {@link MixinClassLoader} implementation
+     */
+    public @NotNull MixinClassLoader buildClassLoader() {
+        return new MixinClassLoader(buildTransformer());
+    }
+    
+    /**
+     * Creates a {@link MixinClassLoader} containing the mixins from this {@link MixinCollection}.
+     *
+     * @param parent The parent {@link ClassLoader}
+     * @return the default {@link MixinClassLoader} implementation
+     */
+    public @NotNull MixinClassLoader buildClassLoader(ClassLoader parent) {
+        return new MixinClassLoader(parent, buildTransformer());
+    }
+    
+    /**
      * Creates a {@link MixinTransformer} containing the mixins from this {@link MixinCollection}.
      *
      * @return the default {@link MixinTransformer} implementation

@@ -36,6 +36,10 @@ public class ASMUtils {
         if (methodNode.invisibleLocalVariableAnnotations != null) methodNode.invisibleLocalVariableAnnotations.clear();
     }
     
+    public static @NotNull String getInternalName(@NotNull String name) {
+        return name.replace('.', '/');
+    }
+    
     public static @NotNull LabelNode getLabelNode(@NotNull Label label) {
         if (!(label.info instanceof LabelNode)) {
             label.info = new LabelNode();
