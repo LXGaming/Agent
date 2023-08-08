@@ -29,21 +29,21 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface VisitMethod {
-    
+
     int access() default -1;
-    
+
     @NotNull String name() default "";
-    
+
     @NotNull String descriptor() default "";
-    
+
     @NotNull String signature() default "";
-    
+
     @NotNull String[] exceptions() default {};
-    
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @interface List {
-        
+
         @NotNull VisitMethod[] value();
     }
 }

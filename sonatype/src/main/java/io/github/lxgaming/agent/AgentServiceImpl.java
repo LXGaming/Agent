@@ -22,7 +22,7 @@ import io.github.lxgaming.agent.mixin.sonatype.nexus.coreui.AssetXOMixin;
 import org.jetbrains.annotations.NotNull;
 
 public class AgentServiceImpl implements AgentService {
-    
+
     @Override
     public void initialize(@NotNull MixinCollection mixins) {
         mixins.register(AssetXOMixin.class);

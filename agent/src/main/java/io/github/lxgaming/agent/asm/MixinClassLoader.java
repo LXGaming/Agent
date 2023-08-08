@@ -28,20 +28,20 @@ import java.io.InputStream;
 import java.util.function.Predicate;
 
 public class MixinClassLoader extends ClassLoader {
-    
+
     static {
         ClassLoader.registerAsParallelCapable();
     }
-    
+
     protected final Logger logger;
     protected final ClassLoader platformClassLoader;
     protected final MixinTransformer transformer;
     protected Predicate<String> transformerFilter;
-    
+
     public MixinClassLoader(@NotNull MixinTransformer transformer) {
         this(getSystemClassLoader(), transformer);
     }
-    
+
     public MixinClassLoader(@Nullable ClassLoader parent, @NotNull MixinTransformer transformer) {
         super(parent);
         this.logger = LoggerFactory.getLogger(getClass());
@@ -49,11 +49,11 @@ public class MixinClassLoader extends ClassLoader {
         this.transformer = transformer;
         this.transformerFilter = name -> true;
     }
-    
+
     public void addTransformerFilter(@NotNull Predicate<String> filter) {
         this.transformerFilter = transformerFilter.and(filter);
     }
-    
+
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         synchronized (getClassLoadingLock(name)) {
@@ -65,7 +65,7 @@ public class MixinClassLoader extends ClassLoader {
                     // no-op
                 }
             }
-            
+
             if (c == null) {
                 if (transformerFilter.test(name)) {
                     String internalName = ASMUtils.getInternalName(name);
@@ -75,28 +75,28 @@ public class MixinClassLoader extends ClassLoader {
                     c = super.loadClass(name, resolve);
                 }
             }
-            
+
             if (resolve) {
                 resolveClass(c);
             }
-            
+
             return c;
         }
     }
-    
+
     protected byte[] transform(@NotNull String name) throws ClassNotFoundException {
         byte[] bytes;
         try (InputStream inputStream = getResourceAsStream(name + ".class")) {
             if (inputStream == null) {
                 throw new IOException(String.format("Resource %s not found", name));
             }
-            
+
             bytes = IOUtils.readAllBytes(inputStream);
         } catch (IOException ex) {
             logger.error("Encountered an error while reading {}", name, ex);
             throw new ClassNotFoundException(name);
         }
-        
+
         try {
             byte[] modifiedBytes = transformer.transform(this, name, bytes);
             if (modifiedBytes != null) {
@@ -106,7 +106,7 @@ public class MixinClassLoader extends ClassLoader {
         } catch (Throwable t) {
             logger.error("Encountered an error while transforming {}", name, t);
         }
-        
+
         return bytes;
     }
 }

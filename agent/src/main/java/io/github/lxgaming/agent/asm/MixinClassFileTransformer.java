@@ -24,27 +24,27 @@ import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
 public class MixinClassFileTransformer implements ClassFileTransformer {
-    
+
     protected final Logger logger;
     protected final MixinTransformer transformer;
-    
+
     public MixinClassFileTransformer(@NotNull MixinTransformer transformer) {
         this.logger = LoggerFactory.getLogger(getClass());
         this.transformer = transformer;
     }
-    
+
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
         if (loader == null || className == null) {
             return null;
         }
-        
+
         try {
             byte[] modifiedBytes = transformer.transform(loader, className, classfileBuffer);
             if (modifiedBytes != null) {
                 logger.debug("Transformed {}", className);
             }
-            
+
             return modifiedBytes;
         } catch (Throwable t) {
             logger.error("Encountered an error while transforming {}", className, t);

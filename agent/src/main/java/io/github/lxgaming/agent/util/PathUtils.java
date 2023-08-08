@@ -22,22 +22,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class PathUtils {
-    
+
     public static @NotNull Path getAbsolutePath(@NotNull String first, @NotNull String... more) {
         return Paths.get(first, more).toAbsolutePath().normalize();
     }
-    
+
     public static @NotNull Path getWorkingDirectory() {
         String agentDirectory = System.getProperty("agent.dir");
         if (StringUtils.isNotBlank(agentDirectory)) {
             return getAbsolutePath(agentDirectory);
         }
-        
+
         String userDirectory = System.getProperty("user.dir");
         if (StringUtils.isNotBlank(userDirectory)) {
             return getAbsolutePath(userDirectory);
         }
-        
+
         return getAbsolutePath(".");
     }
 }

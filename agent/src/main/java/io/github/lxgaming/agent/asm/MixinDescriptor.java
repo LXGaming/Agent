@@ -32,7 +32,7 @@ import java.lang.reflect.Modifier;
 import java.util.Objects;
 
 public class MixinDescriptor {
-    
+
     protected final Class<?> clazz;
     protected final Method method;
     protected final Boolean setting;
@@ -41,7 +41,7 @@ public class MixinDescriptor {
     protected final MethodHandle methodHandle;
     protected Annotation visitInsnAnnotation;
     protected Object instance;
-    
+
     public MixinDescriptor(@NotNull Class<?> clazz, @NotNull Method method, @NotNull Boolean setting,
                            @NotNull Visit visit, @NotNull VisitMethod visitMethod, @NotNull MethodHandle methodHandle,
                            @Nullable Annotation visitInsnAnnotation, @Nullable Object instance) {
@@ -49,7 +49,7 @@ public class MixinDescriptor {
         this.visitInsnAnnotation = visitInsnAnnotation;
         this.instance = instance;
     }
-    
+
     public MixinDescriptor(@NotNull Class<?> clazz, @NotNull Method method, @NotNull Boolean setting,
                            @NotNull Visit visit, @NotNull VisitMethod visitMethod, @NotNull MethodHandle methodHandle) {
         this.clazz = clazz;
@@ -59,7 +59,7 @@ public class MixinDescriptor {
         this.visitMethod = visitMethod;
         this.methodHandle = methodHandle;
     }
-    
+
     public void visit(@NotNull ClassNode classNode, @NotNull MethodNode methodNode) throws Throwable {
         if (Modifier.isStatic(method.getModifiers())) {
             methodHandle.invoke(classNode, methodNode);
@@ -67,7 +67,7 @@ public class MixinDescriptor {
             methodHandle.invoke(instance, classNode, methodNode);
         }
     }
-    
+
     public void visit(@NotNull ClassNode classNode, @NotNull MethodNode methodNode, @NotNull AbstractInsnNode abstractInsnNode) throws Throwable {
         if (Modifier.isStatic(method.getModifiers())) {
             methodHandle.invoke(classNode, methodNode, abstractInsnNode);
@@ -75,54 +75,54 @@ public class MixinDescriptor {
             methodHandle.invoke(instance, classNode, methodNode, abstractInsnNode);
         }
     }
-    
+
     public @NotNull Class<?> getClazz() {
         return clazz;
     }
-    
+
     public @NotNull Method getMethod() {
         return method;
     }
-    
+
     public @NotNull Boolean getSetting() {
         return setting;
     }
-    
+
     public @NotNull Visit getVisit() {
         return visit;
     }
-    
+
     public @NotNull VisitMethod getVisitMethod() {
         return visitMethod;
     }
-    
+
     public @NotNull MethodHandle getMethodHandle() {
         return methodHandle;
     }
-    
+
     public @Nullable Annotation getVisitInsnAnnotation() {
         return visitInsnAnnotation;
     }
-    
+
     public @Nullable Object getInstance() {
         return instance;
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(clazz, method, setting, visit, visitMethod, methodHandle, visitInsnAnnotation, instance);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        
+
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        
+
         MixinDescriptor descriptor = (MixinDescriptor) obj;
         return Objects.equals(clazz, descriptor.clazz)
                 && Objects.equals(method, descriptor.method)
@@ -133,7 +133,7 @@ public class MixinDescriptor {
                 && Objects.equals(visitInsnAnnotation, descriptor.visitInsnAnnotation)
                 && Objects.equals(instance, descriptor.instance);
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s.%s%s", clazz.getName(), method.getName(), Type.getMethodDescriptor(method));

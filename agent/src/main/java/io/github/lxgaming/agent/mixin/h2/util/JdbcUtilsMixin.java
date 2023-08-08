@@ -33,7 +33,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 @Setting(value = "h2.jndi")
 @Visit(name = "org/h2/util/JdbcUtils")
 public class JdbcUtilsMixin {
-    
+
     @VisitMethod(
             name = "getConnection",
             descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Properties;)Ljava/sql/Connection;"
@@ -45,14 +45,14 @@ public class JdbcUtilsMixin {
     )
     private void onLookup(ClassNode classNode, MethodNode methodNode, MethodInsnNode methodInsnNode) {
         Label label = new Label();
-        
+
         ASMUtils.insertBefore(methodNode.instructions, methodInsnNode,
                 new VarInsnNode(Opcodes.ALOAD, 1),
                 new LdcInsnNode("java:"),
                 new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "java/lang/String", "startsWith", "(Ljava/lang/String;)Z", false),
                 new JumpInsnNode(Opcodes.IFEQ, ASMUtils.getLabelNode(label))
         );
-        
+
         methodNode.visitLabel(label);
         methodNode.visitTypeInsn(Opcodes.NEW, "java/sql/SQLException");
         methodNode.visitInsn(Opcodes.DUP);

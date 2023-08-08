@@ -27,7 +27,7 @@ import org.objectweb.asm.tree.MethodNode;
 @Setting(value = "log4j.jndi")
 @Visit(name = "org/apache/logging/log4j/core/lookup/JndiLookup")
 public class JndiLookupMixin {
-    
+
     @VisitMethod(
             name = "lookup",
             descriptor = "(Lorg/apache/logging/log4j/core/LogEvent;Ljava/lang/String;)Ljava/lang/String;"

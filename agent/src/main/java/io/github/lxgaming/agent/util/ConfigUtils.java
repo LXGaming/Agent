@@ -25,56 +25,56 @@ import java.nio.file.Path;
 import java.util.StringJoiner;
 
 public class ConfigUtils {
-    
+
     public static @Nullable Boolean getBoolean(@Nullable Config config, @Nullable Setting... settings) {
         if (config == null) {
             return null;
         }
-        
+
         String path = getSetting(settings);
         return StringUtils.isNotBlank(path) ? getBoolean(config, path) : null;
     }
-    
+
     public static @Nullable Boolean getBoolean(@Nullable Config config, @NotNull String path) {
         return config != null ? config.getBoolean(path) : null;
     }
-    
+
     public static @Nullable Path getPath(@Nullable Config config, @NotNull String path) {
         String value = getString(config, path);
         return StringUtils.isNotBlank(value) ? PathUtils.getWorkingDirectory().resolve(value) : null;
     }
-    
+
     public static @Nullable String getString(@Nullable Config config, @Nullable Setting... settings) {
         if (config == null) {
             return null;
         }
-        
+
         String path = getSetting(settings);
         return StringUtils.isNotBlank(path) ? getString(config, path) : null;
     }
-    
+
     public static @Nullable String getString(@Nullable Config config, @NotNull String path) {
         return config != null ? config.getString(path) : null;
     }
-    
+
     public static @Nullable String getSetting(@Nullable Setting... settings) {
         if (settings == null || settings.length == 0) {
             return null;
         }
-        
+
         StringJoiner stringJoiner = null;
         for (Setting setting : settings) {
             if (setting == null || StringUtils.isBlank(setting.value())) {
                 continue;
             }
-            
+
             if (stringJoiner == null || !setting.inherit()) {
                 stringJoiner = new StringJoiner(".");
             }
-            
+
             stringJoiner.add(setting.value());
         }
-        
+
         String value = stringJoiner != null ? stringJoiner.toString() : null;
         return StringUtils.isNotBlank(value) ? "mixin." + value : null;
     }

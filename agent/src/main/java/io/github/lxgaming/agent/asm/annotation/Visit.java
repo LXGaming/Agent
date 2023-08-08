@@ -28,23 +28,23 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Visit {
-    
+
     int version() default -1;
-    
+
     int access() default -1;
-    
+
     @NotNull String name() default "";
-    
+
     @NotNull String signature() default "";
-    
+
     @NotNull String superName() default "";
-    
+
     @NotNull String[] interfaces() default {};
-    
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     @interface List {
-        
+
         @NotNull Visit[] value();
     }
 }

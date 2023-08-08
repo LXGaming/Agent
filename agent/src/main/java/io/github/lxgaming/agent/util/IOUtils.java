@@ -24,15 +24,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class IOUtils {
-    
+
     public static final int DEFAULT_BUFFER_SIZE = 8192;
-    
+
     public static byte[] readAllBytes(@NotNull InputStream inputStream) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         transferBytes(inputStream, outputStream);
         return outputStream.toByteArray();
     }
-    
+
     public static void transferBytes(@NotNull InputStream inputStream, @NotNull OutputStream outputStream) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         int read;

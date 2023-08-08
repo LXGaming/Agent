@@ -25,7 +25,7 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class ASMUtils {
-    
+
     public static void clear(@NotNull MethodNode methodNode) {
         if (methodNode.instructions != null) methodNode.instructions.clear();
         if (methodNode.tryCatchBlocks != null) methodNode.tryCatchBlocks.clear();
@@ -35,38 +35,38 @@ public class ASMUtils {
         if (methodNode.visibleLocalVariableAnnotations != null) methodNode.visibleLocalVariableAnnotations.clear();
         if (methodNode.invisibleLocalVariableAnnotations != null) methodNode.invisibleLocalVariableAnnotations.clear();
     }
-    
+
     public static @NotNull String getInternalName(@NotNull String name) {
         return name.replace('.', '/');
     }
-    
+
     public static @NotNull LabelNode getLabelNode(@NotNull Label label) {
         if (!(label.info instanceof LabelNode)) {
             label.info = new LabelNode();
         }
-        
+
         return (LabelNode) label.info;
     }
-    
+
     public static void insert(@NotNull InsnList insnList, @NotNull AbstractInsnNode previousInsn, @NotNull AbstractInsnNode... insnNodes) {
         for (AbstractInsnNode insnNode : insnNodes) {
             insnList.insert(previousInsn, insnNode);
             previousInsn = insnNode;
         }
     }
-    
+
     public static void insertBefore(@NotNull InsnList insnList, @NotNull AbstractInsnNode nextInsn, @NotNull AbstractInsnNode... insnNodes) {
         for (AbstractInsnNode insnNode : insnNodes) {
             insnList.insertBefore(nextInsn, insnNode);
         }
     }
-    
+
     public static Type[] getTypes(@NotNull Class<?>... classes) {
         Type[] types = new Type[classes.length];
         for (int index = 0; index < classes.length; index++) {
             types[index] = Type.getType(classes[index]);
         }
-        
+
         return types;
     }
 }

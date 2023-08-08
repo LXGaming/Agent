@@ -19,15 +19,15 @@ package io.github.lxgaming.agent.asm.exception;
 import org.jetbrains.annotations.Nullable;
 
 public class MixinException extends RuntimeException {
-    
+
     public MixinException(@Nullable String message) {
         super(message);
     }
-    
+
     public MixinException(@Nullable String message, @Nullable Throwable cause) {
         super(message, cause);
     }
-    
+
     public MixinException(@Nullable Throwable cause) {
         super(cause);
     }

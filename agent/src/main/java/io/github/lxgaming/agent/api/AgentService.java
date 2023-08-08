@@ -20,7 +20,7 @@ import io.github.lxgaming.agent.asm.MixinCollection;
 import org.jetbrains.annotations.NotNull;
 
 public interface AgentService {
-    
+
     /**
      * Triggered when the agent is ready to collect mixins.
      *

@@ -25,19 +25,19 @@ import java.lang.instrument.Instrumentation;
 import java.util.ServiceLoader;
 
 public class Main {
-    
+
     private static final ServiceLoader<AgentService> AGENT_SERVICES = ServiceLoader.load(AgentService.class);
-    
+
     public static void premain(String agentArgs, Instrumentation inst) throws IOException {
         Configuration configuration = new Configuration();
         configuration.loadConfiguration();
         configuration.saveConfiguration();
-        
+
         MixinCollection mixins = new MixinCollection(configuration.getOverrideConfig());
         for (AgentService service : AGENT_SERVICES) {
             service.initialize(mixins);
         }
-        
+
         inst.addTransformer(mixins.buildClassFileTransformer(), inst.isRetransformClassesSupported());
     }
 }

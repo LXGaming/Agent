@@ -35,21 +35,21 @@ import java.nio.file.Path;
 import java.util.Collection;
 
 public class MixinTransformer {
-    
+
     protected final Collection<MixinDescriptor> descriptors;
     protected final Logger logger;
     protected Config config;
-    
+
     public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors, @Nullable Config config) {
         this(descriptors);
         this.config = config;
     }
-    
+
     public MixinTransformer(@NotNull Collection<MixinDescriptor> descriptors) {
         this.descriptors = descriptors;
         this.logger = LoggerFactory.getLogger(getClass());
     }
-    
+
     public byte[] transform(@NotNull ClassLoader classLoader, @NotNull String name, byte[] bytes) throws Throwable {
         ClassNode classNode = null;
         boolean modified = false;
@@ -57,32 +57,32 @@ public class MixinTransformer {
             if (descriptor.getSetting() != Boolean.TRUE) {
                 continue;
             }
-            
+
             if (!MixinUtils.canVisit(name, descriptor.getVisit())) {
                 continue;
             }
-            
+
             if (classNode == null) {
                 classNode = new ClassNode();
                 ClassReader classReader = new ClassReader(bytes);
                 classReader.accept(classNode, ClassReader.SKIP_DEBUG);
             }
-            
+
             if (!MixinUtils.canVisit(classNode, descriptor.getVisit())) {
                 continue;
             }
-            
+
             for (MethodNode methodNode : classNode.methods) {
                 if (!MixinUtils.canVisit(methodNode, descriptor.getVisitMethod())) {
                     continue;
                 }
-                
+
                 if (descriptor.getVisitInsnAnnotation() == null) {
                     descriptor.visit(classNode, methodNode);
                     modified = true;
                     continue;
                 }
-                
+
                 for (AbstractInsnNode insnNode : methodNode.instructions) {
                     if (MixinUtils.canVisit(insnNode, descriptor.getVisitInsnAnnotation())) {
                         descriptor.visit(classNode, methodNode, insnNode);
@@ -91,32 +91,32 @@ public class MixinTransformer {
                 }
             }
         }
-        
+
         if (classNode == null || !modified) {
             return null;
         }
-        
+
         ClassWriter classWriter = new ClassWriterImpl(ClassWriter.COMPUTE_FRAMES, classLoader, classNode);
         classNode.accept(classWriter);
-        
+
         byte[] modifiedBytes = classWriter.toByteArray();
         export(name, modifiedBytes);
         return modifiedBytes;
     }
-    
+
     protected void export(@NotNull String name, byte[] bytes) {
         try {
             Path exportPath = ConfigUtils.getPath(config, "debug.export-dir");
             if (exportPath == null || ConfigUtils.getBoolean(config, "debug.export") != Boolean.TRUE) {
                 return;
             }
-            
+
             Path path = exportPath.resolve(name + ".class");
             Path parent = path.getParent();
             if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
-            
+
             Files.write(path, bytes);
             logger.info("Exported {}", path);
         } catch (IOException ex) {

@@ -24,7 +24,7 @@ import io.github.lxgaming.agent.mixin.log4j.core.pattern.MessagePatternConverter
 import org.jetbrains.annotations.NotNull;
 
 public class AgentServiceImpl implements AgentService {
-    
+
     @Override
     public void initialize(@NotNull MixinCollection mixins) {
         mixins.register(JdbcUtilsMixin.class);

@@ -27,13 +27,13 @@ import org.objectweb.asm.tree.MethodNode;
 @Setting(value = "nexus")
 @Visit(name = "org/sonatype/nexus/coreui/AssetXO")
 public class AssetXOMixin {
-    
+
     @Setting(value = "anonymize-name")
     private String name = "anonymous";
-    
+
     @Setting(value = "anonymize-ip")
     private String ip = "127.0.0.1";
-    
+
     @Setting(value = "anonymize")
     @VisitMethod(
             name = "getCreatedBy",
@@ -45,7 +45,7 @@ public class AssetXOMixin {
         methodNode.visitInsn(Opcodes.ARETURN);
         methodNode.visitMaxs(-1, -1);
     }
-    
+
     @Setting(value = "anonymize")
     @VisitMethod(
             name = "setCreatedBy",
@@ -59,7 +59,7 @@ public class AssetXOMixin {
         methodNode.visitInsn(Opcodes.RETURN);
         methodNode.visitMaxs(-1, -1);
     }
-    
+
     @Setting(value = "anonymize")
     @VisitMethod(
             name = "getCreatedByIp",
@@ -71,7 +71,7 @@ public class AssetXOMixin {
         methodNode.visitInsn(Opcodes.ARETURN);
         methodNode.visitMaxs(-1, -1);
     }
-    
+
     @Setting(value = "anonymize")
     @VisitMethod(
             name = "setCreatedByIp",

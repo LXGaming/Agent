@@ -52,45 +52,45 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 
 public class MixinCollection {
-    
+
     protected static final MethodHandles.Lookup LOOKUP;
     protected static final Map<Class<? extends Annotation>, Class<?>[]> MAPPINGS;
     protected static final Map<Class<? extends Annotation>, Class<?>[]> INSN_MAPPINGS;
-    
+
     static {
         LOOKUP = MethodHandles.lookup();
-        
+
         MAPPINGS = new LinkedHashMap<>();
         MAPPINGS.put(VisitMethod.class, new Class[]{ClassNode.class, MethodNode.class});
-        
+
         INSN_MAPPINGS = new LinkedHashMap<>();
         INSN_MAPPINGS.put(VisitFieldInsn.class, new Class[]{ClassNode.class, MethodNode.class, FieldInsnNode.class});
         INSN_MAPPINGS.put(VisitMethodInsn.class, new Class[]{ClassNode.class, MethodNode.class, MethodInsnNode.class});
     }
-    
+
     protected final Collection<Class<?>> classes;
     protected final Collection<MixinDescriptor> descriptors;
     protected final Logger logger;
     protected Config config;
-    
+
     public MixinCollection(@Nullable Config config) {
         this(new HashSet<>(), new LinkedHashSet<>());
         this.config = config;
     }
-    
+
     protected MixinCollection(@NotNull Collection<Class<?>> classes, @NotNull Collection<MixinDescriptor> descriptors) {
         this.classes = classes;
         this.descriptors = descriptors;
         this.logger = LoggerFactory.getLogger(getClass());
     }
-    
+
     /**
      * Clears the mixins from this {@link MixinCollection}.
      */
     public void clear() {
         descriptors.clear();
     }
-    
+
     /**
      * Creates a {@link MixinClassFileTransformer} containing the mixins from this {@link MixinCollection}.
      *
@@ -99,7 +99,7 @@ public class MixinCollection {
     public @NotNull MixinClassFileTransformer buildClassFileTransformer() {
         return new MixinClassFileTransformer(buildTransformer());
     }
-    
+
     /**
      * Creates a {@link MixinClassLoader} containing the mixins from this {@link MixinCollection}.
      *
@@ -108,7 +108,7 @@ public class MixinCollection {
     public @NotNull MixinClassLoader buildClassLoader() {
         return new MixinClassLoader(buildTransformer());
     }
-    
+
     /**
      * Creates a {@link MixinClassLoader} containing the mixins from this {@link MixinCollection}.
      *
@@ -118,7 +118,7 @@ public class MixinCollection {
     public @NotNull MixinClassLoader buildClassLoader(ClassLoader parent) {
         return new MixinClassLoader(parent, buildTransformer());
     }
-    
+
     /**
      * Creates a {@link MixinTransformer} containing the mixins from this {@link MixinCollection}.
      *
@@ -127,7 +127,7 @@ public class MixinCollection {
     public @NotNull MixinTransformer buildTransformer() {
         return new MixinTransformer(new LinkedHashSet<>(descriptors), config);
     }
-    
+
     /**
      * Registers mixins of the class specified in {@code mixinClass},
      * which must be annotated with {@link Visit}.
@@ -145,7 +145,7 @@ public class MixinCollection {
             return false;
         }
     }
-    
+
     /**
      * Adds mixins of the class specified in {@code mixinClass},
      * which must be annotated with {@link Visit}.
@@ -161,49 +161,49 @@ public class MixinCollection {
                     mixinClass
             ));
         }
-        
+
         classes.add(mixinClass);
-        
+
         if (!mixinClass.isAnnotationPresent(Visit.class)) {
             throw new MixinException(String.format(
                     "Invalid class %s! Missing visitor annotation",
                     mixinClass.getName()
             ));
         }
-        
+
         Object instance = createInstance(mixinClass);
-        
+
         Collection<MixinDescriptor> descriptors = getDescriptors(mixinClass, instance);
-        
+
         Class<?> clazz = mixinClass;
         while (clazz != null && clazz != Object.class) {
             setFields(clazz, instance);
             clazz = clazz.getSuperclass();
         }
-        
+
         this.descriptors.addAll(descriptors);
         return this;
     }
-    
+
     protected @Nullable Object createInstance(@NotNull Class<?> mixinClass) throws ReflectiveOperationException {
         if (Modifier.isAbstract(mixinClass.getModifiers()) || Modifier.isInterface(mixinClass.getModifiers())) {
             return null;
         }
-        
+
         Constructor<?> constructor = mixinClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         return constructor.newInstance();
     }
-    
+
     protected void setFields(@NotNull Class<?> clazz, @Nullable Object instance) throws ReflectiveOperationException {
         Setting classSetting = clazz.getDeclaredAnnotation(Setting.class);
-        
+
         for (Field field : clazz.getDeclaredFields()) {
             Setting fieldSetting = field.getDeclaredAnnotation(Setting.class);
             if (fieldSetting == null) {
                 continue;
             }
-            
+
             if (!String.class.isAssignableFrom(field.getType())) {
                 throw new MixinException(String.format(
                         "Invalid descriptor %s.%s! Expected %s but found %s",
@@ -213,7 +213,7 @@ public class MixinCollection {
                         Type.getDescriptor(field.getType())
                 ));
             }
-            
+
             if (!Modifier.isStatic(field.getModifiers()) && instance == null) {
                 throw new MixinException(String.format(
                         "Invalid field %s.%s! Expected static but found instance",
@@ -221,7 +221,7 @@ public class MixinCollection {
                         field.getName()
                 ));
             }
-            
+
             if (Modifier.isFinal(field.getModifiers())) {
                 if (Modifier.isStatic(field.getModifiers())) {
                     throw new MixinException(String.format(
@@ -230,22 +230,22 @@ public class MixinCollection {
                             field.getName()
                     ));
                 }
-                
+
                 Field modifiersField = Field.class.getDeclaredField("modifiers");
                 modifiersField.setAccessible(true);
                 modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
             }
-            
+
             String setting = ConfigUtils.getString(config, classSetting, fieldSetting);
             if (StringUtils.isBlank(setting)) {
                 continue;
             }
-            
+
             field.setAccessible(true);
             field.set(instance, setting);
         }
     }
-    
+
     protected @NotNull Collection<MixinDescriptor> getDescriptors(@NotNull Class<?> clazz, @Nullable Object instance) throws IllegalAccessException {
         Visit[] visits = clazz.getDeclaredAnnotationsByType(Visit.class);
         if (visits.length == 0) {
@@ -254,7 +254,7 @@ public class MixinCollection {
                     clazz.getName()
             ));
         }
-        
+
         Collection<MixinDescriptor> descriptors = new ArrayList<>();
         for (Visit visit : visits) {
             for (Method method : clazz.getDeclaredMethods()) {
@@ -265,7 +265,7 @@ public class MixinCollection {
                         if (visitInsnAnnotation == null) {
                             continue;
                         }
-                        
+
                         if (hasVisitor) {
                             throw new MixinException(String.format(
                                     "Invalid annotations on %s.%s! Cannot have multiple instruction visitors",
@@ -273,21 +273,21 @@ public class MixinCollection {
                                     method.getName()
                             ));
                         }
-                        
+
                         descriptors.add(createDescriptor(clazz, method, visit, visitMethod, visitInsnAnnotation, instance));
                         hasVisitor = true;
                     }
-                    
+
                     if (!hasVisitor) {
                         descriptors.add(createDescriptor(clazz, method, visit, visitMethod, null, instance));
                     }
                 }
             }
         }
-        
+
         return descriptors;
     }
-    
+
     protected @NotNull MixinDescriptor createDescriptor(@NotNull Class<?> clazz,
                                                         @NotNull Method method,
                                                         @NotNull Visit visit,
@@ -301,7 +301,7 @@ public class MixinCollection {
                     method.getName()
             ));
         }
-        
+
         if (!Modifier.isStatic(method.getModifiers()) && instance == null) {
             throw new MixinException(String.format(
                     "Invalid method %s.%s! Expected static but found instance",
@@ -309,14 +309,14 @@ public class MixinCollection {
                     method.getName()
             ));
         }
-        
+
         Class<?>[] parameterTypes;
         if (visitInsnAnnotation != null) {
             parameterTypes = INSN_MAPPINGS.get(visitInsnAnnotation.annotationType());
         } else {
             parameterTypes = MAPPINGS.get(visitMethod.annotationType());
         }
-        
+
         if (!Arrays.equals(method.getParameterTypes(), parameterTypes) || method.getReturnType() != Void.TYPE) {
             throw new MixinException(String.format(
                     "Invalid descriptor on %s.%s! Expected %s but found %s",
@@ -326,7 +326,7 @@ public class MixinCollection {
                     Type.getMethodDescriptor(method)
             ));
         }
-        
+
         Boolean setting = ConfigUtils.getBoolean(config,
                 clazz.getDeclaredAnnotation(Setting.class),
                 method.getDeclaredAnnotation(Setting.class)
@@ -338,13 +338,13 @@ public class MixinCollection {
                     method.getName()
             ));
         }
-        
+
         method.setAccessible(true);
         MethodHandle methodHandle = LOOKUP.unreflect(method);
         if (Modifier.isStatic(method.getModifiers())) {
             return new MixinDescriptor(clazz, method, setting, visit, visitMethod, methodHandle, visitInsnAnnotation, null);
         }
-        
+
         return new MixinDescriptor(clazz, method, setting, visit, visitMethod, methodHandle, visitInsnAnnotation, instance);
     }
 }

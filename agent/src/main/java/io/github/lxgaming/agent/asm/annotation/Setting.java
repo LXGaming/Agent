@@ -26,8 +26,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
 public @interface Setting {
-    
+
     @NotNull String value();
-    
+
     boolean inherit() default true;
 }

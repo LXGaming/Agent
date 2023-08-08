@@ -34,7 +34,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 @Setting(value = "log4j.jndi")
 @Visit(name = "org/apache/logging/log4j/core/pattern/MessagePatternConverter")
 public class MessagePatternConverterMixin {
-    
+
     @VisitMethod(
             name = "<init>"
     )

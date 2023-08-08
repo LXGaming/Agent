@@ -26,12 +26,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface VisitMethodInsn {
-    
+
     int opcode() default -1;
-    
+
     @NotNull String owner() default "";
-    
+
     @NotNull String name() default "";
-    
+
     @NotNull String descriptor() default "";
 }
