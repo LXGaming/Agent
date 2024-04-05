@@ -123,13 +123,13 @@ subprojects {
         useJUnitPlatform()
     }
 
-    task copyResources(type: Copy) {
+    tasks.register("copyResources", Copy) {
         from project(":agent").file("src/main/resources/simplelogger.properties")
         filter { String line -> line.replace("org.slf4j", "io.github.lxgaming.agent.lib.slf4j") }
-        into "$buildDir/resources/main"
+        into layout.buildDirectory.dir("resources/main")
     }
 
-    task mergeResources {
+    tasks.register("mergeResources") {
         doLast {
             Set<File> files = [
                 project(":agent"),
@@ -138,7 +138,7 @@ subprojects {
                 project.file("src/main/resources/agent.conf")
             }
 
-            def output = new File("$buildDir/resources/main/agent.conf")
+            def output = layout.buildDirectory.file("resources/main/agent.conf").get().asFile
             output.getParentFile().mkdirs()
             output.newWriter().withWriter { writer ->
                 writer << files.collect { file -> file.text.normalize() }.join('\n')
