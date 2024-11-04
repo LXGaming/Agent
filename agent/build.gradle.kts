@@ -1,4 +1,10 @@
-archivesBaseName = "agent"
+val asmVersion: String by project
+val configVersion: String by project
+val slf4jVersion: String by project
+
+base {
+    archivesName = "agent"
+}
 
 dependencies {
     api("com.typesafe:config:${configVersion}")
@@ -7,16 +13,10 @@ dependencies {
     testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
 }
 
-processResources {
-    from("../LICENSE")
-    rename("LICENSE", "LICENSE-Agent")
-    exclude("simplelogger.properties")
-}
-
 publishing {
     publications {
-        mavenPublication(MavenPublication) {
-            from components.java
+        named<MavenPublication>("maven") {
+            from(components["java"])
             pom {
                 description = "Java Agent Framework"
             }
@@ -24,6 +24,12 @@ publishing {
     }
 }
 
-shadowJar {
+tasks.processResources {
+    from("../LICENSE")
+    rename("LICENSE", "LICENSE-Agent")
+    exclude("simplelogger.properties")
+}
+
+tasks.shadowJar {
     enabled = false
 }

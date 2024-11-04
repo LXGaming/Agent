@@ -1,9 +1,0 @@
-include "agent"
-
-[
-    "generic",
-    "sonatype"
-].each {
-    include(it)
-    findProject(":$it")?.name = "agent-$it"
-}
