@@ -36,8 +36,8 @@ public class AssetXOMixin {
 
     @Setting(value = "anonymize")
     @VisitMethod(
-            name = "getCreatedBy",
-            descriptor = "()Ljava/lang/String;"
+        name = "getCreatedBy",
+        descriptor = "()Ljava/lang/String;"
     )
     private void onGetCreatedBy(ClassNode classNode, MethodNode methodNode) {
         ASMUtils.clear(methodNode);
@@ -48,8 +48,8 @@ public class AssetXOMixin {
 
     @Setting(value = "anonymize")
     @VisitMethod(
-            name = "setCreatedBy",
-            descriptor = "(Ljava/lang/String;)V"
+        name = "setCreatedBy",
+        descriptor = "(Ljava/lang/String;)V"
     )
     private void onSetCreatedBy(ClassNode classNode, MethodNode methodNode) {
         ASMUtils.clear(methodNode);
@@ -62,8 +62,8 @@ public class AssetXOMixin {
 
     @Setting(value = "anonymize")
     @VisitMethod(
-            name = "getCreatedByIp",
-            descriptor = "()Ljava/lang/String;"
+        name = "getCreatedByIp",
+        descriptor = "()Ljava/lang/String;"
     )
     private void onGetCreatedByIp(ClassNode classNode, MethodNode methodNode) {
         ASMUtils.clear(methodNode);
@@ -74,8 +74,8 @@ public class AssetXOMixin {
 
     @Setting(value = "anonymize")
     @VisitMethod(
-            name = "setCreatedByIp",
-            descriptor = "(Ljava/lang/String;)V"
+        name = "setCreatedByIp",
+        descriptor = "(Ljava/lang/String;)V"
     )
     private void onSetCreatedByIp(ClassNode classNode, MethodNode methodNode) {
         ASMUtils.clear(methodNode);

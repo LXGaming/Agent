@@ -39,8 +39,8 @@ public class Configuration {
 
     protected static final ConfigParseOptions DEFAULT_PARSE_OPTIONS = ConfigParseOptions.defaults();
     protected static final ConfigRenderOptions DEFAULT_RENDER_OPTIONS = ConfigRenderOptions.defaults()
-            .setOriginComments(false)
-            .setJson(false);
+        .setOriginComments(false)
+        .setJson(false);
     protected static final ConfigResolveOptions DEFAULT_RESOLVE_OPTIONS = ConfigResolveOptions.defaults();
 
     protected final Path configPath;

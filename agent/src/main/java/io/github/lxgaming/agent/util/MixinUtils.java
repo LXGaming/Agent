@@ -37,19 +37,19 @@ public class MixinUtils {
 
     public static boolean canVisit(@NotNull ClassNode classNode, @NotNull Visit visit) {
         return (visit.version() == -1 || visit.version() == classNode.version)
-                && (visit.access() == -1 || (classNode.access & visit.access()) == visit.access())
-                && canVisitClass(classNode.name, visit.name())
-                && (visit.signature().equals("") || visit.signature().equals(classNode.signature))
-                && canVisitClass(classNode.superName, visit.superName())
-                && (visit.interfaces().length == 0 || StringUtils.containsAll(classNode.interfaces, visit.interfaces()));
+            && (visit.access() == -1 || (classNode.access & visit.access()) == visit.access())
+            && canVisitClass(classNode.name, visit.name())
+            && (visit.signature().equals("") || visit.signature().equals(classNode.signature))
+            && canVisitClass(classNode.superName, visit.superName())
+            && (visit.interfaces().length == 0 || StringUtils.containsAll(classNode.interfaces, visit.interfaces()));
     }
 
     public static boolean canVisit(@NotNull MethodNode methodNode, @NotNull VisitMethod visitMethod) {
         return (visitMethod.access() == -1 || (methodNode.access & visitMethod.access()) == visitMethod.access())
-                && (visitMethod.name().equals("") || visitMethod.name().equals(methodNode.name))
-                && canVisitMethodDescriptor(methodNode.desc, visitMethod.descriptor())
-                && (visitMethod.signature().equals("") || visitMethod.signature().equals(methodNode.signature))
-                && (visitMethod.exceptions().length == 0 || StringUtils.containsAll(methodNode.exceptions, visitMethod.exceptions()));
+            && (visitMethod.name().equals("") || visitMethod.name().equals(methodNode.name))
+            && canVisitMethodDescriptor(methodNode.desc, visitMethod.descriptor())
+            && (visitMethod.signature().equals("") || visitMethod.signature().equals(methodNode.signature))
+            && (visitMethod.exceptions().length == 0 || StringUtils.containsAll(methodNode.exceptions, visitMethod.exceptions()));
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -58,18 +58,18 @@ public class MixinUtils {
             VisitFieldInsn visitInsn = (VisitFieldInsn) visitInsnAnnotation;
             FieldInsnNode insnNode = (FieldInsnNode) abstractInsnNode;
             return (visitInsn.opcode() == -1 || visitInsn.opcode() == insnNode.getOpcode())
-                    && canVisitClass(insnNode.owner, visitInsn.owner())
-                    && (visitInsn.name().equals("") || visitInsn.name().equals(insnNode.name))
-                    && (visitInsn.descriptor().equals("") || visitInsn.descriptor().equals(insnNode.desc));
+                && canVisitClass(insnNode.owner, visitInsn.owner())
+                && (visitInsn.name().equals("") || visitInsn.name().equals(insnNode.name))
+                && (visitInsn.descriptor().equals("") || visitInsn.descriptor().equals(insnNode.desc));
         }
 
         if (visitInsnAnnotation instanceof VisitMethodInsn && abstractInsnNode instanceof MethodInsnNode) {
             VisitMethodInsn visitInsn = (VisitMethodInsn) visitInsnAnnotation;
             MethodInsnNode insnNode = (MethodInsnNode) abstractInsnNode;
             return (visitInsn.opcode() == -1 || visitInsn.opcode() == insnNode.getOpcode())
-                    && canVisitClass(insnNode.owner, visitInsn.owner())
-                    && (visitInsn.name().equals("") || visitInsn.name().equals(insnNode.name))
-                    && canVisitMethodDescriptor(insnNode.desc, visitInsn.descriptor());
+                && canVisitClass(insnNode.owner, visitInsn.owner())
+                && (visitInsn.name().equals("") || visitInsn.name().equals(insnNode.name))
+                && canVisitMethodDescriptor(insnNode.desc, visitInsn.descriptor());
         }
 
         return false;
@@ -81,8 +81,8 @@ public class MixinUtils {
         }
 
         return visitName.charAt(visitName.length() - 1) == '/'
-                ? className.startsWith(visitName) // Package
-                : className.equals(visitName); // Class
+            ? className.startsWith(visitName) // Package
+            : className.equals(visitName); // Class
     }
 
     public static boolean canVisitMethodDescriptor(@NotNull String methodDescriptor, @NotNull String visitDescriptor) {

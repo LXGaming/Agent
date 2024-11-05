@@ -157,8 +157,8 @@ public class MixinCollection {
     public MixinCollection add(Class<?> mixinClass) throws Exception {
         if (classes.contains(mixinClass)) {
             throw new IllegalArgumentException(String.format(
-                    "%s is already registered",
-                    mixinClass
+                "%s is already registered",
+                mixinClass
             ));
         }
 
@@ -166,8 +166,8 @@ public class MixinCollection {
 
         if (!mixinClass.isAnnotationPresent(Visit.class)) {
             throw new MixinException(String.format(
-                    "Invalid class %s! Missing visitor annotation",
-                    mixinClass.getName()
+                "Invalid class %s! Missing visitor annotation",
+                mixinClass.getName()
             ));
         }
 
@@ -206,28 +206,28 @@ public class MixinCollection {
 
             if (!String.class.isAssignableFrom(field.getType())) {
                 throw new MixinException(String.format(
-                        "Invalid descriptor %s.%s! Expected %s but found %s",
-                        clazz.getName(),
-                        field.getName(),
-                        Type.getDescriptor(String.class),
-                        Type.getDescriptor(field.getType())
+                    "Invalid descriptor %s.%s! Expected %s but found %s",
+                    clazz.getName(),
+                    field.getName(),
+                    Type.getDescriptor(String.class),
+                    Type.getDescriptor(field.getType())
                 ));
             }
 
             if (!Modifier.isStatic(field.getModifiers()) && instance == null) {
                 throw new MixinException(String.format(
-                        "Invalid field %s.%s! Expected static but found instance",
-                        clazz.getName(),
-                        field.getName()
+                    "Invalid field %s.%s! Expected static but found instance",
+                    clazz.getName(),
+                    field.getName()
                 ));
             }
 
             if (Modifier.isFinal(field.getModifiers())) {
                 if (Modifier.isStatic(field.getModifiers())) {
                     throw new MixinException(String.format(
-                            "Invalid field %s.%s! Compile-time constant",
-                            clazz.getName(),
-                            field.getName()
+                        "Invalid field %s.%s! Compile-time constant",
+                        clazz.getName(),
+                        field.getName()
                     ));
                 }
 
@@ -250,8 +250,8 @@ public class MixinCollection {
         Visit[] visits = clazz.getDeclaredAnnotationsByType(Visit.class);
         if (visits.length == 0) {
             throw new MixinException(String.format(
-                    "Invalid class %s! Missing visitor annotation",
-                    clazz.getName()
+                "Invalid class %s! Missing visitor annotation",
+                clazz.getName()
             ));
         }
 
@@ -268,9 +268,9 @@ public class MixinCollection {
 
                         if (hasVisitor) {
                             throw new MixinException(String.format(
-                                    "Invalid annotations on %s.%s! Cannot have multiple instruction visitors",
-                                    clazz.getName(),
-                                    method.getName()
+                                "Invalid annotations on %s.%s! Cannot have multiple instruction visitors",
+                                clazz.getName(),
+                                method.getName()
                             ));
                         }
 
@@ -296,17 +296,17 @@ public class MixinCollection {
                                                         @Nullable Object instance) throws IllegalAccessException {
         if (Modifier.isAbstract(method.getModifiers())) {
             throw new MixinException(String.format(
-                    "Invalid method %s.%s! Cannot be abstract",
-                    clazz.getName(),
-                    method.getName()
+                "Invalid method %s.%s! Cannot be abstract",
+                clazz.getName(),
+                method.getName()
             ));
         }
 
         if (!Modifier.isStatic(method.getModifiers()) && instance == null) {
             throw new MixinException(String.format(
-                    "Invalid method %s.%s! Expected static but found instance",
-                    clazz.getName(),
-                    method.getName()
+                "Invalid method %s.%s! Expected static but found instance",
+                clazz.getName(),
+                method.getName()
             ));
         }
 
@@ -319,23 +319,23 @@ public class MixinCollection {
 
         if (!Arrays.equals(method.getParameterTypes(), parameterTypes) || method.getReturnType() != Void.TYPE) {
             throw new MixinException(String.format(
-                    "Invalid descriptor on %s.%s! Expected %s but found %s",
-                    clazz.getName(),
-                    method.getName(),
-                    Type.getMethodDescriptor(Type.VOID_TYPE, ASMUtils.getTypes(parameterTypes)),
-                    Type.getMethodDescriptor(method)
+                "Invalid descriptor on %s.%s! Expected %s but found %s",
+                clazz.getName(),
+                method.getName(),
+                Type.getMethodDescriptor(Type.VOID_TYPE, ASMUtils.getTypes(parameterTypes)),
+                Type.getMethodDescriptor(method)
             ));
         }
 
         Boolean setting = ConfigUtils.getBoolean(config,
-                clazz.getDeclaredAnnotation(Setting.class),
-                method.getDeclaredAnnotation(Setting.class)
+            clazz.getDeclaredAnnotation(Setting.class),
+            method.getDeclaredAnnotation(Setting.class)
         );
         if (setting == null) {
             throw new MixinException(String.format(
-                    "Missing setting on %s.%s!",
-                    clazz.getName(),
-                    method.getName()
+                "Missing setting on %s.%s!",
+                clazz.getName(),
+                method.getName()
             ));
         }
 

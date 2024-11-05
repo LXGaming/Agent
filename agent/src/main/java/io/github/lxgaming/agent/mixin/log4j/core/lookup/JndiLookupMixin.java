@@ -29,8 +29,8 @@ import org.objectweb.asm.tree.MethodNode;
 public class JndiLookupMixin {
 
     @VisitMethod(
-            name = "lookup",
-            descriptor = "(Lorg/apache/logging/log4j/core/LogEvent;Ljava/lang/String;)Ljava/lang/String;"
+        name = "lookup",
+        descriptor = "(Lorg/apache/logging/log4j/core/LogEvent;Ljava/lang/String;)Ljava/lang/String;"
     )
     private void onLookup(ClassNode classNode, MethodNode methodNode) {
         ASMUtils.clear(methodNode);

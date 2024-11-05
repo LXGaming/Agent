@@ -36,24 +36,24 @@ import org.objectweb.asm.tree.VarInsnNode;
 public class MessagePatternConverterMixin {
 
     @VisitMethod(
-            name = "<init>"
+        name = "<init>"
     )
     @VisitFieldInsn(
-            opcode = Opcodes.PUTFIELD,
-            owner = "org/apache/logging/log4j/core/pattern/MessagePatternConverter",
-            name = "noLookups",
-            descriptor = "Z"
+        opcode = Opcodes.PUTFIELD,
+        owner = "org/apache/logging/log4j/core/pattern/MessagePatternConverter",
+        name = "noLookups",
+        descriptor = "Z"
     )
     private void onInit(ClassNode classNode, MethodNode methodNode, FieldInsnNode fieldInsnNode) {
         ASMUtils.insert(methodNode.instructions, fieldInsnNode,
-                new VarInsnNode(Opcodes.ALOAD, 0),
-                new LdcInsnNode(true),
-                new FieldInsnNode(
-                        fieldInsnNode.getOpcode(),
-                        fieldInsnNode.owner,
-                        fieldInsnNode.name,
-                        fieldInsnNode.desc
-                )
+            new VarInsnNode(Opcodes.ALOAD, 0),
+            new LdcInsnNode(true),
+            new FieldInsnNode(
+                fieldInsnNode.getOpcode(),
+                fieldInsnNode.owner,
+                fieldInsnNode.name,
+                fieldInsnNode.desc
+            )
         );
         methodNode.visitMaxs(-1, -1);
     }

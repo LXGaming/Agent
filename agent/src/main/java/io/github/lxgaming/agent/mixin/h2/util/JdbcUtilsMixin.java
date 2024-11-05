@@ -35,22 +35,22 @@ import org.objectweb.asm.tree.VarInsnNode;
 public class JdbcUtilsMixin {
 
     @VisitMethod(
-            name = "getConnection",
-            descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Properties;)Ljava/sql/Connection;"
+        name = "getConnection",
+        descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Properties;)Ljava/sql/Connection;"
     )
     @VisitMethodInsn(
-            owner = "javax/naming/Context",
-            name = "lookup",
-            descriptor = "(Ljava/lang/String;)Ljava/lang/Object;"
+        owner = "javax/naming/Context",
+        name = "lookup",
+        descriptor = "(Ljava/lang/String;)Ljava/lang/Object;"
     )
     private void onLookup(ClassNode classNode, MethodNode methodNode, MethodInsnNode methodInsnNode) {
         Label label = new Label();
 
         ASMUtils.insertBefore(methodNode.instructions, methodInsnNode,
-                new VarInsnNode(Opcodes.ALOAD, 1),
-                new LdcInsnNode("java:"),
-                new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "java/lang/String", "startsWith", "(Ljava/lang/String;)Z", false),
-                new JumpInsnNode(Opcodes.IFEQ, ASMUtils.getLabelNode(label))
+            new VarInsnNode(Opcodes.ALOAD, 1),
+            new LdcInsnNode("java:"),
+            new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "java/lang/String", "startsWith", "(Ljava/lang/String;)Z", false),
+            new JumpInsnNode(Opcodes.IFEQ, ASMUtils.getLabelNode(label))
         );
 
         methodNode.visitLabel(label);

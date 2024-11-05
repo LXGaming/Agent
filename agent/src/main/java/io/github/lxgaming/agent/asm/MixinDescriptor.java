@@ -125,13 +125,13 @@ public class MixinDescriptor {
 
         MixinDescriptor descriptor = (MixinDescriptor) obj;
         return Objects.equals(clazz, descriptor.clazz)
-                && Objects.equals(method, descriptor.method)
-                && Objects.equals(setting, descriptor.setting)
-                && Objects.equals(visit, descriptor.visit)
-                && Objects.equals(visitMethod, descriptor.visitMethod)
-                && Objects.equals(methodHandle, descriptor.methodHandle)
-                && Objects.equals(visitInsnAnnotation, descriptor.visitInsnAnnotation)
-                && Objects.equals(instance, descriptor.instance);
+            && Objects.equals(method, descriptor.method)
+            && Objects.equals(setting, descriptor.setting)
+            && Objects.equals(visit, descriptor.visit)
+            && Objects.equals(visitMethod, descriptor.visitMethod)
+            && Objects.equals(methodHandle, descriptor.methodHandle)
+            && Objects.equals(visitInsnAnnotation, descriptor.visitInsnAnnotation)
+            && Objects.equals(instance, descriptor.instance);
     }
 
     @Override
