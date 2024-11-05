@@ -32,7 +32,8 @@ subprojects {
 
     dependencies {
         implementation("org.jetbrains:annotations:${annotationsVersion}")
-        testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+        testImplementation("org.junit.jupiter:junit-jupiter:${junitVersion}")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 
     java {
