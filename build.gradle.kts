@@ -4,7 +4,7 @@ plugins {
     id("java")
     id("maven-publish")
     id("signing")
-    id("com.gradleup.shadow") version "8.3.4" apply false
+    id("com.gradleup.shadow") version "8.3.6" apply false
 }
 
 subprojects {
