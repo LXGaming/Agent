@@ -1,8 +1,7 @@
 include("agent")
 
 listOf(
-    "generic",
-    "sonatype"
+    "generic"
 ).forEach {
     include(it)
     findProject(":${it}")?.name = "agent-${it}"
