@@ -29,6 +29,8 @@ tasks.processResources {
         into("META-INF")
         rename { "${it}-Agent" }
     }
+
+    exclude("agent.conf")
 }
 
 tasks.shadowJar {
