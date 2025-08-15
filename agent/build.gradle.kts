@@ -27,7 +27,6 @@ publishing {
 tasks.processResources {
     from("../LICENSE")
     rename("LICENSE", "LICENSE-Agent")
-    exclude("simplelogger.properties")
 }
 
 tasks.shadowJar {

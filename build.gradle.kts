@@ -129,60 +129,12 @@ subprojects {
         }
     }
 
-    tasks.processResources {
-        val excludedProjects = listOf(
-            "agent"
-        )
-
-        outputs.upToDateWhen { false }
-        if (!excludedProjects.contains(project.name)) {
-            dependsOn("copyResources")
-            finalizedBy("mergeResources")
-        }
-    }
-
     tasks.test {
         testLogging {
             exceptionFormat = TestExceptionFormat.FULL
         }
 
         useJUnitPlatform()
-    }
-
-    tasks.register<Copy>("copyResources") {
-        from(project(":agent").file("src/main/resources/simplelogger.properties"))
-        filter {
-            it.replace("org.slf4j", "io.github.lxgaming.agent.lib.slf4j")
-        }
-        into(layout.buildDirectory.dir("resources/main"))
-    }
-
-    tasks.register("mergeResources") {
-        dependsOn(tasks.processResources)
-
-        doLast {
-            val inputFiles = listOf(
-                project(":agent"),
-                project
-            ).map {
-                it.file("src/main/resources/agent.conf")
-            }
-
-            val outputFile = layout.buildDirectory.file("resources/main/agent.conf").get().asFile
-            outputFile.parentFile.mkdirs()
-
-            outputFile.writer().use { writer ->
-                for ((index, inputFile) in inputFiles.withIndex()) {
-                    if (index != 0) {
-                        writer.appendLine()
-                    }
-
-                    inputFile.reader().use { reader ->
-                        reader.copyTo(writer)
-                    }
-                }
-            }
-        }
     }
 }
 

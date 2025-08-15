@@ -37,8 +37,6 @@ tasks.jar {
             "Premain-Class" to "io.github.lxgaming.agent.Main",
         )
     }
-
-    exclude("simplelogger.properties")
 }
 
 tasks.shadowJar {
