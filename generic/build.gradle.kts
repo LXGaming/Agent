@@ -34,7 +34,7 @@ tasks.jar {
             "Can-Redefine-Classes" to "true",
             "Can-Retransform-Classes" to "true",
             "Implementation-Title" to "Agent Generic",
-            "Premain-Class" to "io.github.lxgaming.agent.Main",
+            "Premain-Class" to "io.github.lxgaming.agent.Main"
         )
     }
 }

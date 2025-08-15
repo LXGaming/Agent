@@ -111,10 +111,10 @@ subprojects {
         manifest {
             attributes(
                 "Implementation-Title" to "Agent",
-                "Implementation-Vendor" to "LX_Gaming",
+                "Implementation-Vendor" to "Alex Thomson",
                 "Implementation-Version" to project.version.toString(),
                 "Specification-Title" to "Agent",
-                "Specification-Vendor" to "LX_Gaming",
+                "Specification-Vendor" to "Alex Thomson",
                 "Specification-Version" to "1"
             )
         }
