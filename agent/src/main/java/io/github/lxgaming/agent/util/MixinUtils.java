@@ -39,16 +39,16 @@ public class MixinUtils {
         return (visit.version() == -1 || visit.version() == classNode.version)
             && (visit.access() == -1 || (classNode.access & visit.access()) == visit.access())
             && canVisitClass(classNode.name, visit.name())
-            && (visit.signature().equals("") || visit.signature().equals(classNode.signature))
+            && (visit.signature().isEmpty() || visit.signature().equals(classNode.signature))
             && canVisitClass(classNode.superName, visit.superName())
             && (visit.interfaces().length == 0 || StringUtils.containsAll(classNode.interfaces, visit.interfaces()));
     }
 
     public static boolean canVisit(@NotNull MethodNode methodNode, @NotNull VisitMethod visitMethod) {
         return (visitMethod.access() == -1 || (methodNode.access & visitMethod.access()) == visitMethod.access())
-            && (visitMethod.name().equals("") || visitMethod.name().equals(methodNode.name))
+            && (visitMethod.name().isEmpty() || visitMethod.name().equals(methodNode.name))
             && canVisitMethodDescriptor(methodNode.desc, visitMethod.descriptor())
-            && (visitMethod.signature().equals("") || visitMethod.signature().equals(methodNode.signature))
+            && (visitMethod.signature().isEmpty() || visitMethod.signature().equals(methodNode.signature))
             && (visitMethod.exceptions().length == 0 || StringUtils.containsAll(methodNode.exceptions, visitMethod.exceptions()));
     }
 
@@ -59,8 +59,8 @@ public class MixinUtils {
             FieldInsnNode insnNode = (FieldInsnNode) abstractInsnNode;
             return (visitInsn.opcode() == -1 || visitInsn.opcode() == insnNode.getOpcode())
                 && canVisitClass(insnNode.owner, visitInsn.owner())
-                && (visitInsn.name().equals("") || visitInsn.name().equals(insnNode.name))
-                && (visitInsn.descriptor().equals("") || visitInsn.descriptor().equals(insnNode.desc));
+                && (visitInsn.name().isEmpty() || visitInsn.name().equals(insnNode.name))
+                && (visitInsn.descriptor().isEmpty() || visitInsn.descriptor().equals(insnNode.desc));
         }
 
         if (visitInsnAnnotation instanceof VisitMethodInsn && abstractInsnNode instanceof MethodInsnNode) {
@@ -68,7 +68,7 @@ public class MixinUtils {
             MethodInsnNode insnNode = (MethodInsnNode) abstractInsnNode;
             return (visitInsn.opcode() == -1 || visitInsn.opcode() == insnNode.getOpcode())
                 && canVisitClass(insnNode.owner, visitInsn.owner())
-                && (visitInsn.name().equals("") || visitInsn.name().equals(insnNode.name))
+                && (visitInsn.name().isEmpty() || visitInsn.name().equals(insnNode.name))
                 && canVisitMethodDescriptor(insnNode.desc, visitInsn.descriptor());
         }
 
