@@ -25,8 +25,10 @@ publishing {
 }
 
 tasks.processResources {
-    from("../LICENSE")
-    rename("LICENSE", "LICENSE-Agent")
+    from("../LICENSE") {
+        into("META-INF")
+        rename { "${it}-Agent" }
+    }
 }
 
 tasks.shadowJar {
