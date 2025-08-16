@@ -1,16 +1,18 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     id("java")
-    id("maven-publish")
     id("signing")
     id("com.gradleup.shadow") version "9.0.2" apply false
+    id("com.vanniktech.maven.publish") version "0.34.0"
 }
 
 subprojects {
     apply(plugin = "com.gradleup.shadow")
+    apply(plugin = "com.vanniktech.maven.publish")
     apply(plugin = "java-library")
-    apply(plugin = "maven-publish")
     apply(plugin = "signing")
 
     val annotationsVersion: String by project
@@ -39,72 +41,45 @@ subprojects {
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-
-        withJavadocJar()
-        withSourcesJar()
     }
 
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                groupId = project.group.toString()
-                artifactId = project.base.archivesName.get()
-                version = project.version.toString()
-                pom {
-                    name = "Agent"
-                    url = "https://github.com/LXGaming/Agent"
-                    developers {
-                        developer {
-                            id = "lxgaming"
-                            name = "LXGaming"
-                        }
-                    }
-                    issueManagement {
-                        system = "GitHub Issues"
-                        url = "https://github.com/LXGaming/Agent/issues"
-                    }
-                    licenses {
-                        license {
-                            name = "The Apache License, Version 2.0"
-                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                        }
-                    }
-                    scm {
-                        connection = "scm:git:https://github.com/LXGaming/Agent.git"
-                        developerConnection = "scm:git:https://github.com/LXGaming/Agent.git"
-                        url = "https://github.com/LXGaming/Agent"
-                    }
+    mavenPublishing {
+        publishToMavenCentral()
+        signAllPublications()
+
+        pom {
+            name.set("Agent")
+            url.set("https://github.com/LXGaming/Agent")
+            developers {
+                developer {
+                    id.set("lxgaming")
+                    name.set("LXGaming")
                 }
             }
-        }
-        repositories {
-            if (project.hasProperty("sonatypeUsername") && project.hasProperty("sonatypePassword")) {
-                maven {
-                    name = "sonatype"
-                    url = if (project.version.toString().contains("-SNAPSHOT")) {
-                        uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
-                    } else {
-                        uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2")
-                    }
-
-                    credentials {
-                        username = project.property("sonatypeUsername").toString()
-                        password = project.property("sonatypePassword").toString()
-                    }
+            issueManagement {
+                system.set("GitHub Issues")
+                url.set("https://github.com/LXGaming/Agent/issues")
+            }
+            licenses {
+                license {
+                    name.set("The Apache License, Version 2.0")
+                    url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                 }
+            }
+            scm {
+                connection.set("scm:git:https://github.com/LXGaming/Agent.git")
+                developerConnection.set("scm:git:https://github.com/LXGaming/Agent.git")
+                url.set("https://github.com/LXGaming/Agent")
             }
         }
     }
 
     signing {
-        if (project.hasProperty("signingKey") && project.hasProperty("signingPassword")) {
-            useInMemoryPgpKeys(
-                project.property("signingKey").toString(),
-                project.property("signingPassword").toString()
-            )
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        if (signingKey != null && signingPassword != null) {
+            useInMemoryPgpKeys(signingKey, signingPassword)
         }
-
-        sign(publishing.publications["maven"])
     }
 
     tasks.jar {
@@ -136,6 +111,13 @@ subprojects {
 
         useJUnitPlatform()
     }
+}
+
+mavenPublishing {
+    configure(JavaLibrary(
+        javadocJar = JavadocJar.None(),
+        sourcesJar = false
+    ))
 }
 
 tasks.jar {

@@ -12,14 +12,9 @@ dependencies {
     compileJar("org.slf4j:slf4j-simple:${slf4jVersion}")
 }
 
-publishing {
-    publications {
-        named<MavenPublication>("maven") {
-            from(components["java"])
-            pom {
-                description = "Agent targeting Generic products"
-            }
-        }
+mavenPublishing {
+    pom {
+        description.set("Agent targeting Generic products")
     }
 }
 

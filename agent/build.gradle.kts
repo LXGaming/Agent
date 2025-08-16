@@ -13,14 +13,9 @@ dependencies {
     testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
 }
 
-publishing {
-    publications {
-        named<MavenPublication>("maven") {
-            from(components["java"])
-            pom {
-                description = "Java Agent Framework"
-            }
-        }
+mavenPublishing {
+    pom {
+        description.set("Java Agent Framework")
     }
 }
 
