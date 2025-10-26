@@ -164,7 +164,7 @@ public class MixinCollection {
 
         classes.add(mixinClass);
 
-        if (!mixinClass.isAnnotationPresent(Visit.class)) {
+        if (!mixinClass.isAnnotationPresent(Visit.class) && !mixinClass.isAnnotationPresent(Visit.List.class)) {
             throw new MixinException(String.format(
                 "Invalid class %s! Missing visitor annotation",
                 mixinClass.getName()
