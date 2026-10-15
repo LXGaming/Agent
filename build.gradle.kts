@@ -1,12 +1,13 @@
 import com.vanniktech.maven.publish.JavaLibrary
 import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SourcesJar
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     id("java")
     id("signing")
-    id("com.gradleup.shadow") version "9.4.1" apply false
-    id("com.vanniktech.maven.publish") version "0.36.0"
+    id("com.gradleup.shadow") version "9.6.1" apply false
+    id("com.vanniktech.maven.publish") version "0.37.0"
 }
 
 subprojects {
@@ -15,12 +16,12 @@ subprojects {
     apply(plugin = "java-library")
     apply(plugin = "signing")
 
-    val annotationsVersion: String by project
-    val junitVersion: String by project
+    val annotationsVersion = project.property("annotationsVersion") as String
+    val junitVersion = project.property("junitVersion") as String
 
     group = "io.github.lxgaming"
 
-    val compileJar: Configuration by configurations.creating
+    val compileJar = configurations.create("compileJar")
 
     configurations {
         implementation {
@@ -75,8 +76,8 @@ subprojects {
     }
 
     signing {
-        val signingKey: String? by project
-        val signingPassword: String? by project
+        val signingKey = project.findProperty("signingKey") as String?
+        val signingPassword = project.findProperty("signingPassword") as String?
         if (signingKey != null && signingPassword != null) {
             useInMemoryPgpKeys(signingKey, signingPassword)
         }
@@ -116,7 +117,7 @@ subprojects {
 mavenPublishing {
     configure(JavaLibrary(
         javadocJar = JavadocJar.None(),
-        sourcesJar = false
+        sourcesJar = SourcesJar.None()
     ))
 }
 

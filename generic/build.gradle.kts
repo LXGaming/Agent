@@ -1,4 +1,4 @@
-val slf4jVersion: String by project
+val slf4jVersion = project.property("slf4jVersion") as String
 
 base {
     archivesName = "agent-generic"

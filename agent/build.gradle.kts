@@ -1,6 +1,6 @@
-val asmVersion: String by project
-val configVersion: String by project
-val slf4jVersion: String by project
+val asmVersion = project.property("asmVersion") as String
+val configVersion = project.property("configVersion") as String
+val slf4jVersion = project.property("slf4jVersion") as String
 
 base {
     archivesName = "agent"
