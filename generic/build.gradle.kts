@@ -1,4 +1,8 @@
-val slf4jVersion = project.property("slf4jVersion") as String
+plugins {
+    id("agent.common")
+    id("agent.publish")
+    id("agent.shadow")
+}
 
 base {
     archivesName = "agent-generic"
@@ -7,9 +11,9 @@ base {
 dependencies {
     api(project(path = ":agent"))
     compileJar(project(path = ":agent")) {
-        exclude(module = "annotations")
+        exclude(group = "org.jetbrains", module = "annotations")
     }
-    compileJar("org.slf4j:slf4j-simple:${slf4jVersion}")
+    compileJar(libs.slf4j.simple)
 }
 
 mavenPublishing {
@@ -23,7 +27,6 @@ tasks.compileJava {
 }
 
 tasks.jar {
-    dependsOn(tasks.shadowJar)
     manifest {
         attributes(
             "Can-Redefine-Classes" to "true",
@@ -32,19 +35,4 @@ tasks.jar {
             "Premain-Class" to "io.github.lxgaming.agent.Main"
         )
     }
-}
-
-tasks.shadowJar {
-    configurations = listOf(project.configurations.compileJar.get())
-
-    exclude("META-INF/maven/**")
-    exclude("META-INF/versions/**")
-    exclude("META-INF/LICENSE.txt")
-    exclude("module-info.class")
-
-    mergeServiceFiles()
-
-    relocate("com.typesafe.config", "io.github.lxgaming.agent.lib.config")
-    relocate("org.objectweb.asm", "io.github.lxgaming.agent.lib.asm")
-    relocate("org.slf4j", "io.github.lxgaming.agent.lib.slf4j")
 }
