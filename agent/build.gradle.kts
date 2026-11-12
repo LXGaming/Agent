@@ -1,6 +1,7 @@
 plugins {
     id("agent.common")
     id("agent.publish")
+    id("agent.resources")
 }
 
 base {
@@ -18,8 +19,4 @@ mavenPublishing {
     pom {
         description.set("Java Agent Framework")
     }
-}
-
-tasks.processResources {
-    exclude("agent.conf")
 }

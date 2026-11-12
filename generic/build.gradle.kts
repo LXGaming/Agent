@@ -1,6 +1,7 @@
 plugins {
     id("agent.common")
     id("agent.publish")
+    id("agent.resources")
     id("agent.shadow")
 }
 

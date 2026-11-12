@@ -22,6 +22,12 @@ tasks.shadowJar {
     exclude("META-INF/maven/**")
     exclude("META-INF/LICENSE.txt")
 
+    filesMatching("simplelogger.properties") {
+        filter {
+            it.replace("org.slf4j.", "io.github.lxgaming.agent.lib.slf4j.")
+        }
+    }
+
     mergeServiceFiles()
 
     relocate("com.typesafe.config", "io.github.lxgaming.agent.lib.config")
